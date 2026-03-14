@@ -502,7 +502,7 @@ function renderDashboard() {
   if (rl) {
     var sorted=walks.slice().sort(function(a,b){return b.date>a.date?1:-1;});
     if (!sorted.length) {
-      rl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:16px">No walks yet &mdash; tap + to log your first one!</div>';
+      rl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:16px">No walks yet &mdash; tap + to log your first one!<\/div>';
     } else {
       var html='';
       for (var i=0;i<Math.min(3,sorted.length);i++) html+=walkRowHTML(sorted[i],false);
@@ -517,12 +517,12 @@ function walkRowHTML(w,showEdit) {
   var mph=mins>0?(w.miles/(mins/60)).toFixed(1):'';
   var pace=mins>0?fmtPace(mins/w.miles):'';
   var badges='';
-  if (dur) badges+='<span class="badge">'+dur+'</span>';
-  if (mph) badges+='<span class="badge">'+mph+' mph</span>';
-  if (pace&&showEdit) badges+='<span class="badge">'+pace+'/mi</span>';
-  var editBtn=showEdit?'<button class="edit-btn" onclick="openEditWalk(\''+w.id+'\')">&#9999;&#65039;</button>':'';
-  var note=w.comment?'<div class="walk-note">'+w.comment+'</div>':'';
-  return '<div class="walk-row"><div class="walk-dot"></div><div class="walk-info"><div class="walk-top"><div><span class="walk-date">'+fmtDate(w.date)+'</span> <span class="walk-mi">'+w.miles+' mi</span></div>'+editBtn+'</div>'+(badges?'<div class="badges">'+badges+'</div>':'')+note+'</div></div>';
+  if (dur) badges+='<span class="badge">'+dur+'<\/span>';
+  if (mph) badges+='<span class="badge">'+mph+' mph<\/span>';
+  if (pace&&showEdit) badges+='<span class="badge">'+pace+'/mi<\/span>';
+  var editBtn=showEdit?'<button class="edit-btn" onclick="openEditWalk(\''+w.id+'\')">&#9999;&#65039;<\/button>':'';
+  var note=w.comment?'<div class="walk-note">'+w.comment+'<\/div>':'';
+  return '<div class="walk-row"><div class="walk-dot"><\/div><div class="walk-info"><div class="walk-top"><div><span class="walk-date">'+fmtDate(w.date)+'<\/span> <span class="walk-mi">'+w.miles+' mi<\/span><\/div>'+editBtn+'<\/div>'+(badges?'<div class="badges">'+badges+'<\/div>':'')+note+'<\/div><\/div>';
 }
 
 function renderHistory() {
@@ -531,7 +531,7 @@ function renderHistory() {
   if (ht) ht.textContent='Walk History - '+sorted.length+' walks';
   var hl=document.getElementById('hist-list');
   if (!hl) return;
-  if (!sorted.length) { hl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:24px">No walks logged yet!</div>'; return; }
+  if (!sorted.length) { hl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:24px">No walks logged yet!<\/div>'; return; }
   var html='';
   for (var i=0;i<sorted.length;i++) html+=walkRowHTML(sorted[i],true);
   hl.innerHTML=html;
@@ -545,7 +545,7 @@ function renderCharts() {
   var keys=Object.keys(map).sort().slice(-6);
   var mc=document.getElementById('mchart');
   if (mc) {
-    if (!keys.length) { mc.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;width:100%">No walks logged yet</div>'; }
+    if (!keys.length) { mc.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;width:100%">No walks logged yet<\/div>'; }
     else {
       var maxM=1; for (var i=0;i<keys.length;i++) if (map[keys[i]]>maxM) maxM=map[keys[i]];
       var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -553,7 +553,7 @@ function renderCharts() {
       for (var i=0;i<keys.length;i++) {
         var mon=parseInt(keys[i].split('-')[1])-1;
         var h=Math.max(Math.round((map[keys[i]]/maxM)*88),4);
-        html+='<div class="mwrap"><span class="mval">'+map[keys[i]].toFixed(1)+'</span><div class="mbar" style="height:'+h+'px;background:linear-gradient(180deg,#2d5a3d,#7ab890)"></div><span class="mlbl">'+mo[mon]+'</span></div>';
+        html+='<div class="mwrap"><span class="mval">'+map[keys[i]].toFixed(1)+'<\/span><div class="mbar" style="height:'+h+'px;background:linear-gradient(180deg,#2d5a3d,#7ab890)"><\/div><span class="mlbl">'+mo[mon]+'<\/span><\/div>';
       }
       mc.innerHTML=html;
     }
@@ -561,7 +561,7 @@ function renderCharts() {
   var sorted5=walks.slice().sort(function(a,b){return b.miles-a.miles;}).slice(0,5);
   var lc=document.getElementById('lchart');
   if (lc) {
-    if (!sorted5.length) { lc.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center">No walks yet</div>'; }
+    if (!sorted5.length) { lc.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center">No walks yet<\/div>'; }
     else {
       var maxL=sorted5[0].miles; var html='';
       for (var i=0;i<sorted5.length;i++) {
@@ -569,7 +569,7 @@ function renderCharts() {
         var bg=i===0?'linear-gradient(90deg,#2d5a3d,#7ab890)':'#a8c8b0';
         var cls=i===0?'ldate top':'ldate';
         var trophy=i===0?'&#127942; ':'';
-        html+='<div class="lrow"><div class="lhdr"><span class="'+cls+'">'+trophy+fmtDate(sorted5[i].date)+'</span><span class="lmi">'+sorted5[i].miles+' mi</span></div><div class="ltrack"><div class="lfill" style="width:'+pct+'%;background:'+bg+'"></div></div></div>';
+        html+='<div class="lrow"><div class="lhdr"><span class="'+cls+'">'+trophy+fmtDate(sorted5[i].date)+'<\/span><span class="lmi">'+sorted5[i].miles+' mi<\/span><\/div><div class="ltrack"><div class="lfill" style="width:'+pct+'%;background:'+bg+'"><\/div><\/div><\/div>';
       }
       lc.innerHTML=html;
     }
@@ -578,7 +578,7 @@ function renderCharts() {
   for (var i=0;i<walks.length;i++) if (totalMins(walks[i])>0&&walks[i].miles>0) timed.push(walks[i]);
   var ps=document.getElementById('pstats');
   if (ps) {
-    if (!timed.length) { ps.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log walk durations to unlock speed stats</div>'; }
+    if (!timed.length) { ps.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log walk durations to unlock speed stats<\/div>'; }
     else {
       var sumMph=0; for (var i=0;i<timed.length;i++) sumMph+=timed[i].miles/(totalMins(timed[i])/60);
       var avgMph=(sumMph/timed.length).toFixed(2);
@@ -589,7 +589,7 @@ function renderCharts() {
       var avgW=(sumW/walks.length).toFixed(1);
       var estMins=avgPace*goalMiles;
       var estH=Math.floor(estMins/60); var estM=Math.round(estMins%60);
-      ps.innerHTML='<div class="sgrid" style="margin-bottom:0"><div class="stat" style="grid-column:1/-1"><div class="stat-val">'+avgMph+' mph</div><div class="stat-lbl">average speed</div><div style="font-size:11px;color:#4a8c5c;margin-top:6px">At this pace, '+goalMiles+' mi &asymp; '+estH+'h '+estM+'m</div></div><div class="stat"><div class="stat-val">'+fmtPace(avgPace)+'</div><div class="stat-lbl">avg pace (min/mi)</div></div><div class="stat"><div class="stat-val">'+fastMph.toFixed(2)+'</div><div class="stat-lbl">fastest (mph)</div></div><div class="stat"><div class="stat-val">'+avgW+'</div><div class="stat-lbl">avg walk (mi)</div></div><div class="stat"><div class="stat-val">'+walks.length+'</div><div class="stat-lbl">total walks</div></div></div>';
+      ps.innerHTML='<div class="sgrid" style="margin-bottom:0"><div class="stat" style="grid-column:1/-1"><div class="stat-val">'+avgMph+' mph<\/div><div class="stat-lbl">average speed<\/div><div style="font-size:11px;color:#4a8c5c;margin-top:6px">At this pace, '+goalMiles+' mi &asymp; '+estH+'h '+estM+'m<\/div><\/div><div class="stat"><div class="stat-val">'+fmtPace(avgPace)+'<\/div><div class="stat-lbl">avg pace (min/mi)<\/div><\/div><div class="stat"><div class="stat-val">'+fastMph.toFixed(2)+'<\/div><div class="stat-lbl">fastest (mph)<\/div><\/div><div class="stat"><div class="stat-val">'+avgW+'<\/div><div class="stat-lbl">avg walk (mi)<\/div><\/div><div class="stat"><div class="stat-val">'+walks.length+'<\/div><div class="stat-lbl">total walks<\/div><\/div><\/div>';
     }
   }
 }
@@ -602,31 +602,31 @@ function renderInsights() {
   var goalMiles=goal.goalMiles||13.1;
   var days=goal.targetDate?daysUntil(goal.targetDate):null;
   var ins=[];
-  if (!walks.length) { el.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log your first walk to get personalised insights!</div>'; return; }
+  if (!walks.length) { el.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log your first walk to get personalised insights!<\/div>'; return; }
   var sorted=walks.slice().sort(function(a,b){return a.date>b.date?1:-1;});
   var longest=0; for (var i=0;i<walks.length;i++) if (walks[i].miles>longest) longest=walks[i].miles;
   if (days!==null) {
     var pct=Math.round((longest/goalMiles)*100);
     var wks=Math.floor(days/7);
     if (days<0) ins.push({icon:'&#127937;',tag:'tinfo',label:'Info',text:'Race day has passed! Hope it went amazingly.'});
-    else if (days===0) ins.push({icon:'&#127881;',tag:'tgreat',label:'Great',text:'<b>Race day is TODAY!</b> Good luck!'});
-    else if (pct>=100) ins.push({icon:'&#127942;',tag:'tgreat',label:'Great',text:'<b>Race ready!</b> Your longest walk ('+longest+' mi) matches your '+goalMiles+' mi goal!'});
-    else if (pct>=75) ins.push({icon:'&#128170;',tag:'tgreat',label:'Great',text:'<b>Looking strong!</b> Longest walk is '+longest+' mi - '+pct+'% of your goal with '+wks+' weeks to go.'});
+    else if (days===0) ins.push({icon:'&#127881;',tag:'tgreat',label:'Great',text:'<b>Race day is TODAY!<\/b> Good luck!'});
+    else if (pct>=100) ins.push({icon:'&#127942;',tag:'tgreat',label:'Great',text:'<b>Race ready!<\/b> Your longest walk ('+longest+' mi) matches your '+goalMiles+' mi goal!'});
+    else if (pct>=75) ins.push({icon:'&#128170;',tag:'tgreat',label:'Great',text:'<b>Looking strong!<\/b> Longest walk is '+longest+' mi - '+pct+'% of your goal with '+wks+' weeks to go.'});
     else if (pct>=50) { var add=wks>0?((goalMiles-longest)/wks).toFixed(1):'--'; ins.push({icon:'&#128200;',tag:'ttip',label:'Tip',text:'Your longest walk ('+longest+' mi) is '+pct+'% of your goal. Aim to add '+add+' mi to your long walk each week.'}); }
     else ins.push({icon:'&#9888;',tag:'twarn',label:'Heads up',text:'Your longest walk ('+longest+' mi) is only '+pct+'% of your '+goalMiles+' mi goal with '+wks+' weeks left.'});
   } else {
-    ins.push({icon:'&#127919;',tag:'ttip',label:'Tip',text:'<b>Set your race date</b> using the target button above to unlock race readiness insights.'});
+    ins.push({icon:'&#127919;',tag:'ttip',label:'Tip',text:'<b>Set your race date<\/b> using the target button above to unlock race readiness insights.'});
   }
   var cut7=new Date(); cut7.setDate(cut7.getDate()-7);
   var tw=0; for (var i=0;i<walks.length;i++) if (getDate(walks[i].date)>=cut7) tw++;
-  if (tw>=4) ins.push({icon:'&#127775;',tag:'tgreat',label:'Great',text:'<b>Excellent consistency!</b> '+tw+' walks this week.'});
-  else if (tw===3) ins.push({icon:'&#9989;',tag:'tgreat',label:'Great',text:'<b>Good week!</b> 3 walks logged so far.'});
+  if (tw>=4) ins.push({icon:'&#127775;',tag:'tgreat',label:'Great',text:'<b>Excellent consistency!<\/b> '+tw+' walks this week.'});
+  else if (tw===3) ins.push({icon:'&#9989;',tag:'tgreat',label:'Great',text:'<b>Good week!<\/b> 3 walks logged so far.'});
   else if (tw<=1) ins.push({icon:'&#128161;',tag:'ttip',label:'Tip',text:'Aim for 3-4 walks per week to build up steadily.'});
   if (sorted.length>=4) {
     var r=sorted.slice(-4);
     var f2=(r[0].miles+r[1].miles)/2;
     var l2=(r[2].miles+r[3].miles)/2;
-    if (l2>f2*1.1) ins.push({icon:'&#128200;',tag:'tgreat',label:'Great',text:'<b>Great progress!</b> Your recent walks are longer - endurance is building!'});
+    if (l2>f2*1.1) ins.push({icon:'&#128200;',tag:'tgreat',label:'Great',text:'<b>Great progress!<\/b> Your recent walks are longer - endurance is building!'});
     else if (l2<f2*0.85) ins.push({icon:'&#128161;',tag:'ttip',label:'Tip',text:'Recent walks have been shorter. Try to include a longer walk each week.'});
   }
   var timed=[]; for (var i=0;i<sorted.length;i++) if (totalMins(sorted[i])>0&&sorted[i].miles>0) timed.push(sorted[i]);
@@ -634,11 +634,11 @@ function renderInsights() {
     var sp=0; for (var i=0;i<timed.length;i++) sp+=totalMins(timed[i])/timed[i].miles;
     var ap=sp/timed.length;
     var em=Math.round(ap*goalMiles);
-    ins.push({icon:'&#9201;',tag:'tinfo',label:'Info',text:'Estimated '+goal.raceName+' finish time: <b>'+Math.floor(em/60)+'h '+Math.round(em%60)+'m</b> at your current pace.'});
+    ins.push({icon:'&#9201;',tag:'tinfo',label:'Info',text:'Estimated '+goal.raceName+' finish time: <b>'+Math.floor(em/60)+'h '+Math.round(em%60)+'m<\/b> at your current pace.'});
   }
   var html='';
   for (var i=0;i<ins.length;i++) {
-    html+='<div class="ins-item"><div class="ins-icon">'+ins[i].icon+'</div><div class="ins-body"><span class="ins-tag '+ins[i].tag+'">'+ins[i].label+'</span><br/>'+ins[i].text+'</div></div>';
+    html+='<div class="ins-item"><div class="ins-icon">'+ins[i].icon+'<\/div><div class="ins-body"><span class="ins-tag '+ins[i].tag+'">'+ins[i].label+'<\/span><br/>'+ins[i].text+'<\/div><\/div>';
   }
   el.innerHTML=html;
 }
@@ -653,7 +653,7 @@ function renderFriends() {
       for (var i=0;i<appData.friends.length;i++) {
         var f=appData.friends[i];
         var imp=f.importedAt?fmtDate(f.importedAt.slice(0,10)):'';
-        html+='<div class="frow" id="fr-'+f.id+'"><div><div class="fname">'+f.name+'</div><div class="fmeta">'+f.walks.length+' walks &middot; imported '+imp+'</div></div><div id="frb-'+f.id+'"><button class="edit-btn" onclick="confirmRemove(\''+f.id+'\')">&#128465;&#65039;</button></div></div>';
+        html+='<div class="frow" id="fr-'+f.id+'"><div><div class="fname">'+f.name+'<\/div><div class="fmeta">'+f.walks.length+' walks &middot; imported '+imp+'<\/div><\/div><div id="frb-'+f.id+'"><button class="edit-btn" onclick="confirmRemove(\''+f.id+'\')">&#128465;&#65039;<\/button><\/div><\/div>';
       }
       fl.innerHTML=html;
     }
@@ -664,7 +664,7 @@ function renderFriends() {
   if (ct) ct.textContent='Group Comparison'+(rows.length>1?' - '+rows.length+' walkers':'');
   var ctbl=document.getElementById('cmp-table');
   if (!ctbl) return;
-  if (rows.length===1) { ctbl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Import a friend to compare stats</div>'; return; }
+  if (rows.length===1) { ctbl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Import a friend to compare stats<\/div>'; return; }
   var metrics=[
     {key:'totalWalks',label:'Total Walks',fmt:function(v){return v||0;},hi:true},
     {key:'walksThisMonth',label:'Walks/Month',fmt:function(v){return v||0;},hi:true},
@@ -672,19 +672,19 @@ function renderFriends() {
     {key:'longest',label:'Longest Walk',fmt:function(v){return v?v+' mi':'--';},hi:true},
     {key:'avgPace',label:'Avg Pace',fmt:function(v){return v?fmtPace(v):'--';},hi:false}
   ];
-  var thead='<tr><th class="cslbl">STAT</th>';
-  for (var i=0;i<rows.length;i++) thead+='<th class="cperson"><div class="cavatar" style="background:'+COLORS[i%COLORS.length]+'">'+rows[i].name.charAt(0).toUpperCase()+'</div><div class="cname">'+rows[i].name+'</div></th>';
-  thead+='</tr>';
+  var thead='<tr><th class="cslbl">STAT<\/th>';
+  for (var i=0;i<rows.length;i++) thead+='<th class="cperson"><div class="cavatar" style="background:'+COLORS[i%COLORS.length]+'">'+rows[i].name.charAt(0).toUpperCase()+'<\/div><div class="cname">'+rows[i].name+'<\/div><\/th>';
+  thead+='<\/tr>';
   var tbody='';
   for (var mi=0;mi<metrics.length;mi++) {
     var m=metrics[mi]; var best=null;
     for (var ri=0;ri<rows.length;ri++) { var v=rows[ri][m.key]; if (v!==null&&v!==undefined) { if (best===null) best=v; else if (m.hi&&v>best) best=v; else if (!m.hi&&v<best) best=v; } }
     tbody+='<tr style="background:'+(mi%2===0?'#fafbfa':'#fff')+'">';
-    tbody+='<td class="cslbl">'+m.label+'</td>';
-    for (var ri=0;ri<rows.length;ri++) { var v=rows[ri][m.key]; var ib=(v!==null&&v!==undefined&&v==best&&rows.length>1); tbody+='<td class="cval'+(ib?' best':'')+'">'+m.fmt(v)+(ib?' &#127807;':'')+'</td>'; }
-    tbody+='</tr>';
+    tbody+='<td class="cslbl">'+m.label+'<\/td>';
+    for (var ri=0;ri<rows.length;ri++) { var v=rows[ri][m.key]; var ib=(v!==null&&v!==undefined&&v==best&&rows.length>1); tbody+='<td class="cval'+(ib?' best':'')+'">'+m.fmt(v)+(ib?' &#127807;':'')+'<\/td>'; }
+    tbody+='<\/tr>';
   }
-  ctbl.innerHTML='<div style="overflow-x:auto"><table class="ctable"><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table></div>';
+  ctbl.innerHTML='<div style="overflow-x:auto"><table class="ctable"><thead>'+thead+'<\/thead><tbody>'+tbody+'<\/tbody><\/table><\/div>';
 }
 
 function calcStats(walks,name) {
@@ -702,7 +702,7 @@ function calcStats(walks,name) {
 
 function confirmRemove(id) {
   var el=document.getElementById('frb-'+id);
-  if (el) el.innerHTML='<div class="fr-row"><button class="fr-no" onclick="renderFriends()">Cancel</button><button class="fr-yes" onclick="removeFriend(\''+id+'\')">Remove</button></div>';
+  if (el) el.innerHTML='<div class="fr-row"><button class="fr-no" onclick="renderFriends()">Cancel<\/button><button class="fr-yes" onclick="removeFriend(\''+id+'\')">Remove<\/button><\/div>';
 }
 
 function removeFriend(id) {
@@ -754,17 +754,17 @@ function openEditWalk(id) {
   document.getElementById('m-hrs').value=w.durationHours||'';
   document.getElementById('m-mins').value=w.durationMins||'';
   document.getElementById('m-note').value=w.comment||'';
-  document.getElementById('del-section').innerHTML='<button class="btn-red" onclick="showDelConfirm()">&#128465;&#65039; Delete this walk</button>';
+  document.getElementById('del-section').innerHTML='<button class="btn-red" onclick="showDelConfirm()">&#128465;&#65039; Delete this walk<\/button>';
   var me=document.getElementById('modal-err'); if (me) me.style.display='none';
   document.getElementById('walk-ov').className='overlay';
 }
 
 function showDelConfirm() {
-  document.getElementById('del-section').innerHTML='<div class="confirm-box"><div class="confirm-msg">Are you sure? This cannot be undone.</div><div class="confirm-row"><button class="confirm-no" onclick="hideDelConfirm()">Cancel</button><button class="confirm-yes" onclick="doDelete()">Yes, delete</button></div></div>';
+  document.getElementById('del-section').innerHTML='<div class="confirm-box"><div class="confirm-msg">Are you sure? This cannot be undone.<\/div><div class="confirm-row"><button class="confirm-no" onclick="hideDelConfirm()">Cancel<\/button><button class="confirm-yes" onclick="doDelete()">Yes, delete<\/button><\/div><\/div>';
 }
 
 function hideDelConfirm() {
-  document.getElementById('del-section').innerHTML='<button class="btn-red" onclick="showDelConfirm()">&#128465;&#65039; Delete this walk</button>';
+  document.getElementById('del-section').innerHTML='<button class="btn-red" onclick="showDelConfirm()">&#128465;&#65039; Delete this walk<\/button>';
 }
 
 function doDelete() {
@@ -805,8 +805,8 @@ function renderPresets() {
   for (var i=0;i<PRESETS.length;i++) {
     var p=PRESETS[i];
     var sel=(p.miles===null&&goalSel===null)||(p.miles!==null&&p.miles===goalSel);
-    var sub=p.miles!==null?'<div class="psub">'+p.miles+' mi</div>':'';
-    html+='<button class="pbtn'+(sel?' sel':'')+'" onclick="selectPreset('+(p.miles===null?'null':p.miles)+',\''+p.label+'\')">'+p.label+sub+'</button>';
+    var sub=p.miles!==null?'<div class="psub">'+p.miles+' mi<\/div>':'';
+    html+='<button class="pbtn'+(sel?' sel':'')+'" onclick="selectPreset('+(p.miles===null?'null':p.miles)+',\''+p.label+'\')">'+p.label+sub+'<\/button>';
   }
   document.getElementById('pgrid').innerHTML=html;
   var cf=document.getElementById('custom-flds');
@@ -861,7 +861,7 @@ function showExportFallback(json) {
   if (!el) {
     el=document.createElement('div'); el.id='export-fallback';
     el.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:300;padding:20px;overflow-y:auto;';
-    el.innerHTML='<div style="max-width:480px;margin:0 auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="color:#2d5a3d">Export Data</h2><button onclick="document.getElementById(\'export-fallback\').remove()" style="background:#e8f4ec;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:700;color:#2d5a3d">Close</button></div><p style="font-size:13px;color:#8aa89a;margin-bottom:12px">Copy all the text below and send it to your friend.</p><textarea id="export-text" style="width:100%;height:60vh;font-size:11px;padding:12px;border:1.5px solid #e8ede9;border-radius:10px;" readonly></textarea></div>';
+    el.innerHTML='<div style="max-width:480px;margin:0 auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="color:#2d5a3d">Export Data<\/h2><button onclick="document.getElementById(\'export-fallback\').remove()" style="background:#e8f4ec;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:700;color:#2d5a3d">Close<\/button><\/div><p style="font-size:13px;color:#8aa89a;margin-bottom:12px">Copy all the text below and send it to your friend.<\/p><textarea id="export-text" style="width:100%;height:60vh;font-size:11px;padding:12px;border:1.5px solid #e8ede9;border-radius:10px;" readonly><\/textarea><\/div>';
     document.body.appendChild(el);
   }
   document.getElementById('export-text').value=json;
@@ -893,854 +893,6 @@ function handleImport(e) {
 }
 
 document.getElementById('l-date').value=today();
-renderHeader();
-renderDashboard();
-</script>
-</body>
-</html>  .walk-badges { margin-top:4px; display:flex; flex-wrap:wrap; gap:2px; }
-  .badge { display:inline-block; padding:2px 8px; border-radius:20px; background:var(--green-pale); color:var(--green-dark); font-size:11px; font-weight:600; margin-right:2px; }
-  .walk-comment { font-size:12px; color:var(--muted); margin-top:3px; }
-  .edit-btn { background:none; border:none; cursor:pointer; font-size:16px; margin-left:8px; flex-shrink:0; }
-
-  /* FORM */
-  .form-label { font-size:12px; font-weight:600; color:var(--muted); letter-spacing:0.5px; text-transform:uppercase; display:block; margin-bottom:6px; }
-  .form-input { width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--border); font-size:15px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none; margin-bottom:14px; background:#fafbfa; transition:border-color 0.2s; }
-  .form-input:focus { border-color:var(--green-mid); background:white; }
-  textarea.form-input { resize:none; }
-  .duration-row { display:flex; gap:10px; margin-bottom:14px; }
-  .duration-wrap { flex:1; position:relative; }
-  .duration-wrap input { width:100%; padding:12px 38px 12px 14px; border-radius:10px; border:1.5px solid var(--border); font-size:15px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none; background:#fafbfa; transition:border-color 0.2s; }
-  .duration-wrap input:focus { border-color:var(--green-mid); background:white; }
-  .duration-unit { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--muted); font-weight:600; pointer-events:none; }
-
-  /* BUTTONS */
-  .btn-primary { width:100%; padding:14px; border-radius:12px; background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border:none; color:white; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:0.3px; }
-  .btn-secondary { width:100%; padding:13px; border-radius:12px; background:none; border:1.5px solid var(--border); color:var(--muted); font-size:14px; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:8px; }
-  .btn-green { width:100%; padding:13px; border-radius:12px; background:var(--green-pale); border:none; color:var(--green-dark); font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
-  .btn-danger { width:100%; padding:13px; border-radius:12px; background:none; border:1.5px solid var(--red-border); color:var(--red); font-size:14px; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:8px; font-weight:600; }
-  .btn-green + .btn-green { margin-top:8px; }
-
-  /* CONFIRM DELETE */
-  .confirm-box { margin-top:8px; background:var(--red-pale); border-radius:12px; padding:14px; border:1.5px solid var(--red-border); }
-  .confirm-msg { font-size:13px; color:var(--red); font-weight:600; margin-bottom:10px; text-align:center; }
-  .confirm-btns { display:flex; gap:8px; }
-  .confirm-cancel { flex:1; padding:10px; border-radius:10px; background:none; border:1.5px solid var(--border); color:var(--muted); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600; }
-  .confirm-ok { flex:1; padding:10px; border-radius:10px; background:var(--red); border:none; color:white; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:700; }
-
-  /* FAB */
-  .fab { position:fixed; bottom:24px; right:16px; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border:none; color:white; font-size:26px; cursor:pointer; box-shadow:0 4px 20px rgba(45,90,61,0.35); display:flex; align-items:center; justify-content:center; z-index:100; line-height:1; }
-
-  /* OVERLAY / SHEET */
-  .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:flex-end; justify-content:center; z-index:200; }
-  .sheet { background:white; border-radius:20px 20px 0 0; padding:24px 24px 40px; width:100%; max-width:480px; box-shadow:0 -8px 40px rgba(0,0,0,0.15); max-height:92vh; overflow-y:auto; animation:slideUp 0.3s ease; }
-  .sheet-title { font-family:'Lora',serif; font-size:18px; font-weight:700; color:var(--green-dark); margin-bottom:20px; }
-  @keyframes slideUp { from { transform:translateY(30px); opacity:0 } to { transform:translateY(0); opacity:1 } }
-
-  /* CHARTS */
-  .bar-chart { display:flex; align-items:flex-end; gap:4px; height:80px; padding:0 4px; }
-  .bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .bar { width:100%; border-radius:3px 3px 0 0; transition:height 0.5s ease; min-height:0; }
-  .bar-lbl { font-size:9px; color:var(--muted); font-family:'Lora',serif; }
-  .month-chart { display:flex; align-items:flex-end; gap:8px; height:130px; padding:0 8px; }
-  .month-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
-  .month-bar { width:100%; border-radius:4px 4px 0 0; transition:height 0.6s ease; }
-  .month-val { font-size:10px; color:var(--green-mid); font-family:'Lora',serif; font-weight:600; }
-  .month-lbl { font-size:11px; color:var(--muted); font-family:'Lora',serif; }
-
-  /* LONGEST BAR */
-  .longest-row { margin-bottom:12px; }
-  .longest-header { display:flex; justify-content:space-between; margin-bottom:5px; }
-  .longest-date { font-size:12px; color:var(--text); }
-  .longest-date.top { font-weight:700; }
-  .longest-miles { font-family:'Lora',serif; font-size:13px; font-weight:700; color:var(--green-dark); }
-  .longest-track { background:#e8f0e9; border-radius:4px; height:7px; overflow:hidden; }
-  .longest-fill { height:100%; border-radius:4px; transition:width 0.6s ease; }
-
-  /* GOAL PRESETS */
-  .preset-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
-  .preset-btn { padding:10px 8px; border-radius:10px; border:1.5px solid var(--border); background:#fafbfa; color:var(--muted); font-weight:500; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; text-align:center; }
-  .preset-btn.selected { border-color:var(--green-mid); background:var(--green-pale); color:var(--green-dark); font-weight:700; }
-  .preset-sub { font-size:11px; opacity:0.7; margin-top:2px; }
-
-  /* COMPARISON TABLE */
-  .cmp-table { width:100%; border-collapse:collapse; font-size:13px; overflow-x:auto; display:block; }
-  .cmp-table th, .cmp-table td { padding:10px 6px; }
-  .cmp-table thead th { border-bottom:2px solid #e8f0e9; }
-  .cmp-stat-lbl { text-align:left; font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.4px; min-width:110px; }
-  .cmp-person { text-align:center; min-width:70px; }
-  .cmp-avatar { width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:12px; margin-bottom:4px; }
-  .cmp-name { font-size:11px; color:var(--text); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; }
-  .cmp-val { font-family:'Lora',serif; font-weight:400; color:var(--muted); font-size:13px; text-align:center; }
-  .cmp-val.best { font-weight:700; color:var(--green-dark); font-size:14px; }
-  .cmp-row-even { background:#fafbfa; }
-  .cmp-row-odd { background:white; }
-
-  /* FRIENDS */
-  .friend-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f0f4f1; }
-  .friend-name { font-weight:600; font-size:14px; }
-  .friend-meta { font-size:11px; color:var(--muted); }
-  .friend-remove-btns { display:flex; gap:6px; }
-  .fr-cancel { padding:5px 10px; border-radius:8px; border:1px solid var(--border); background:none; color:var(--muted); font-size:12px; cursor:pointer; }
-  .fr-confirm { padding:5px 10px; border-radius:8px; border:none; background:var(--red); color:white; font-size:12px; cursor:pointer; font-weight:600; }
-
-  /* ALERT */
-  .alert-error { background:#fff0f0; border:1px solid var(--red-border); border-radius:8px; padding:10px 12px; font-size:13px; color:var(--red); margin-bottom:12px; }
-  .alert-success { background:var(--green-pale); border:1px solid #c8e0cc; border-radius:8px; padding:10px 12px; font-size:13px; color:var(--green-dark); font-weight:600; margin-bottom:12px; }
-
-  .hidden { display:none !important; }
-  .see-all { font-size:12px; color:var(--green-mid); background:none; border:none; cursor:pointer; font-weight:600; }
-  .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-  .sheet-desc { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
-</style>
-</head>
-<body>
-<div id="app">
-
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-top">
-      <div>
-        <h1 class="header-title">🌿 Walk With Me</h1>
-        <p class="header-sub" id="header-sub">Half Marathon · Set your race date →</p>
-      </div>
-      <div class="header-btns">
-        <button class="header-btn" onclick="openProfile()">👤 <span id="profile-name-btn">Me</span></button>
-        <button class="header-btn" onclick="openGoal()">🎯</button>
-      </div>
-    </div>
-    <div class="days-badge" id="days-badge" style="display:none">
-      <span class="days-num" id="days-num">0</span>
-      <span class="days-lbl" id="days-lbl">days to race day</span>
-    </div>
-  </div>
-
-  <!-- NAV -->
-  <div class="nav">
-    <button class="nav-btn active" onclick="showTab('dashboard')" id="nav-dashboard">Dashboard</button>
-    <button class="nav-btn" onclick="showTab('log')" id="nav-log">Log Walk</button>
-    <button class="nav-btn" onclick="showTab('history')" id="nav-history">History</button>
-    <button class="nav-btn" onclick="showTab('charts')" id="nav-charts">Charts</button>
-    <button class="nav-btn" onclick="showTab('friends')" id="nav-friends">Friends</button>
-  </div>
-
-  <!-- CONTENT -->
-  <div class="content">
-
-    <!-- DASHBOARD -->
-    <div id="tab-dashboard">
-      <div class="stat-grid">
-        <div class="stat hero">
-          <div class="hero-icon">🥾</div>
-          <div>
-            <div class="hero-lbl">Longest Walk So Far</div>
-            <div class="hero-val" id="dash-longest">No walks yet</div>
-            <div class="hero-sub" id="dash-longest-sub"></div>
-          </div>
-        </div>
-        <div class="stat"><div class="stat-val" id="dash-week-avg">0.00</div><div class="stat-lbl">mi/day avg<br>last 7 days</div></div>
-        <div class="stat"><div class="stat-val" id="dash-month-avg">0.00</div><div class="stat-lbl">mi/day avg<br>last 30 days</div></div>
-        <div class="stat"><div class="stat-val" id="dash-mph">—</div><div class="stat-lbl">avg speed<br>(mph)</div></div>
-        <div class="stat"><div class="stat-val" id="dash-pace">—</div><div class="stat-lbl">avg pace<br>(min / mi)</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Last 14 Days</div>
-        <div class="bar-chart" id="mini-chart"></div>
-      </div>
-      <div class="card">
-        <div class="section-header">
-          <div class="card-title">Recent Walks</div>
-          <button class="see-all" onclick="showTab('history')">See all →</button>
-        </div>
-        <div id="recent-walks"></div>
-      </div>
-    </div>
-
-    <!-- LOG WALK -->
-    <div id="tab-log" class="hidden">
-      <div class="card">
-        <div class="sheet-title">Log a Walk</div>
-        <label class="form-label">Date</label>
-        <input type="date" class="form-input" id="log-date"/>
-        <label class="form-label">Distance (miles)</label>
-        <input type="number" step="0.01" placeholder="e.g. 2.5" class="form-input" id="log-miles"/>
-        <label class="form-label">Duration · optional</label>
-        <div class="duration-row">
-          <div class="duration-wrap"><input type="number" min="0" max="24" placeholder="0" id="log-hours"/><span class="duration-unit">hrs</span></div>
-          <div class="duration-wrap"><input type="number" min="0" max="59" placeholder="0" id="log-mins"/><span class="duration-unit">min</span></div>
-        </div>
-        <label class="form-label">Notes · optional</label>
-        <textarea class="form-input" rows="3" placeholder="How did it feel?" id="log-comment"></textarea>
-        <button class="btn-primary" onclick="saveWalk()">Save Walk 🌿</button>
-        <button class="btn-secondary" onclick="clearLogForm()">Clear</button>
-      </div>
-    </div>
-
-    <!-- HISTORY -->
-    <div id="tab-history" class="hidden">
-      <div class="card">
-        <div class="card-title" id="history-title">Walk History</div>
-        <div id="history-list"></div>
-      </div>
-    </div>
-
-    <!-- CHARTS -->
-    <div id="tab-charts" class="hidden">
-      <div class="card">
-        <div class="card-title">Monthly Miles</div>
-        <div class="month-chart" id="month-chart"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Top 5 Longest Walks</div>
-        <div id="longest-chart"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Speed & Pace Breakdown</div>
-        <div id="pace-stats"></div>
-      </div>
-    </div>
-
-    <!-- FRIENDS -->
-    <div id="tab-friends" class="hidden">
-      <div class="card">
-        <div class="card-title">Share Your Data</div>
-        <p class="sheet-desc">Export your walk history and send it to friends via WhatsApp or Messages. They can import it to compare stats.</p>
-        <button class="btn-green" onclick="exportData()">📤 Export My Walks</button>
-      </div>
-      <div class="card">
-        <div class="card-title">Import a Friend</div>
-        <p class="sheet-desc">When a friend sends you their export file, tap below to import and compare.</p>
-        <div id="import-error" class="alert-error hidden"></div>
-        <div id="import-success" class="alert-success hidden"></div>
-        <input type="file" accept=".json" id="file-input" style="display:none" onchange="handleImport(event)"/>
-        <button class="btn-green" onclick="document.getElementById('file-input').click()">📥 Import Friend's File</button>
-      </div>
-      <div class="card hidden" id="friends-list-card">
-        <div class="card-title">Imported Friends</div>
-        <div id="friends-list"></div>
-      </div>
-      <div class="card">
-        <div class="card-title" id="cmp-title">Group Comparison</div>
-        <div id="comparison-table"></div>
-      </div>
-    </div>
-
-  </div><!-- /content -->
-
-  <!-- FAB -->
-  <button class="fab" id="fab" onclick="openWalkModal()">+</button>
-
-  <!-- WALK MODAL -->
-  <div class="overlay hidden" id="walk-overlay" onclick="closeWalkIfBg(event)">
-    <div class="sheet">
-      <div class="sheet-title" id="walk-modal-title">Log a Walk</div>
-      <label class="form-label">Date</label>
-      <input type="date" class="form-input" id="modal-date"/>
-      <label class="form-label">Distance (miles)</label>
-      <input type="number" step="0.01" placeholder="e.g. 2.5" class="form-input" id="modal-miles"/>
-      <label class="form-label">Duration · optional</label>
-      <div class="duration-row">
-        <div class="duration-wrap"><input type="number" min="0" max="24" placeholder="0" id="modal-hours"/><span class="duration-unit">hrs</span></div>
-        <div class="duration-wrap"><input type="number" min="0" max="59" placeholder="0" id="modal-mins"/><span class="duration-unit">min</span></div>
-      </div>
-      <label class="form-label">Notes · optional</label>
-      <textarea class="form-input" rows="3" placeholder="How did it feel?" id="modal-comment"></textarea>
-      <button class="btn-primary" onclick="saveWalkModal()">Save Walk 🌿</button>
-      <button class="btn-secondary" onclick="closeWalkModal()">Cancel</button>
-      <div id="delete-section"></div>
-    </div>
-  </div>
-
-  <!-- GOAL MODAL -->
-  <div class="overlay hidden" id="goal-overlay" onclick="closeGoalIfBg(event)">
-    <div class="sheet">
-      <div class="sheet-title">Race Goal</div>
-      <label class="form-label">Race Type</label>
-      <div class="preset-grid" id="preset-grid"></div>
-      <div id="custom-fields" class="hidden">
-        <label class="form-label">Custom Distance (miles)</label>
-        <input type="number" step="0.1" placeholder="e.g. 10.0" class="form-input" id="goal-custom-miles"/>
-        <label class="form-label">Event Name</label>
-        <input type="text" class="form-input" id="goal-custom-name" placeholder="e.g. My Big Walk"/>
-      </div>
-      <label class="form-label">Target Date</label>
-      <input type="date" class="form-input" id="goal-date"/>
-      <button class="btn-primary" onclick="saveGoal()">Save Goal 🎯</button>
-      <button class="btn-secondary" onclick="closeGoal()">Cancel</button>
-    </div>
-  </div>
-
-  <!-- PROFILE MODAL -->
-  <div class="overlay hidden" id="profile-overlay" onclick="closeProfileIfBg(event)">
-    <div class="sheet">
-      <div class="sheet-title">Your Name</div>
-      <p class="sheet-desc">This name appears in friend comparisons when you export your data.</p>
-      <label class="form-label">Display Name</label>
-      <input type="text" class="form-input" id="profile-name-input" placeholder="e.g. Sarah"/>
-      <button class="btn-primary" onclick="saveProfile()">Save</button>
-      <button class="btn-secondary" onclick="closeProfile()">Cancel</button>
-    </div>
-  </div>
-
-</div><!-- /app -->
-
-<script>
-// ── DATA ─────────────────────────────────────────────────────────────────────
-const STORAGE_KEY = 'walk_with_me_data';
-let data = loadData();
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const d = raw ? JSON.parse(raw) : {};
-    return {
-      profile: d.profile || { name: 'Me' },
-      goal: d.goal || { targetDate: '', raceName: 'Half Marathon', goalMiles: 13.1 },
-      walks: d.walks || [],
-      friends: d.friends || []
-    };
-  } catch(e) {
-    return { profile:{name:'Me'}, goal:{targetDate:'',raceName:'Half Marathon',goalMiles:13.1}, walks:[], friends:[] };
-  }
-}
-
-function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-}
-
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-const PRESETS = [
-  { label:'5K', miles:3.1 },
-  { label:'10K', miles:6.2 },
-  { label:'Half Marathon', miles:13.1 },
-  { label:'Marathon', miles:26.2 },
-  { label:'Custom', miles:null }
-];
-
-function fmtDate(s) {
-  if (!s) return '';
-  const d = new Date(s + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-}
-
-function daysUntil(s) {
-  if (!s) return null;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const t = new Date(s + 'T00:00:00');
-  return Math.ceil((t - today) / 86400000);
-}
-
-function totalMins(w) { return (w.durationHours||0)*60 + (w.durationMins||0); }
-
-function fmtDuration(w) {
-  const h = w.durationHours||0, m = w.durationMins||0;
-  if (!h && !m) return null;
-  if (h && m) return h+'h '+m+'m';
-  return h ? h+'h' : m+'m';
-}
-
-function fmtPace(mpm) {
-  if (!mpm || isNaN(mpm)) return '—';
-  return Math.floor(mpm)+':'+String(Math.round((mpm%1)*60)).padStart(2,'0');
-}
-
-function weekAvg(walks) {
-  const cut = new Date(); cut.setDate(cut.getDate()-7);
-  const r = walks.filter(w => new Date(w.date+'T00:00:00') >= cut);
-  return r.length ? (r.reduce((s,w)=>s+w.miles,0)/7).toFixed(2) : '0.00';
-}
-
-function monthAvg(walks) {
-  const cut = new Date(); cut.setDate(cut.getDate()-30);
-  const r = walks.filter(w => new Date(w.date+'T00:00:00') >= cut);
-  return r.length ? (r.reduce((s,w)=>s+w.miles,0)/30).toFixed(2) : '0.00';
-}
-
-function calcStats(walks, name) {
-  const cut30 = new Date(); cut30.setDate(cut30.getDate()-30);
-  const month = walks.filter(w => new Date(w.date+'T00:00:00') >= cut30);
-  const longest = walks.length ? Math.max(...walks.map(w=>w.miles)) : null;
-  const avgDist = month.length ? (month.reduce((s,w)=>s+w.miles,0)/month.length).toFixed(1) : null;
-  const timed = walks.filter(w => totalMins(w)>0 && w.miles>0);
-  const avgPace = timed.length ? timed.reduce((s,w)=>s+(totalMins(w)/w.miles),0)/timed.length : null;
-  return { name, totalWalks:walks.length, walksThisMonth:month.length, avgDistMonth:avgDist, longest, avgPace };
-}
-
-function today() { return new Date().toISOString().slice(0,10); }
-
-// ── TAB NAVIGATION ────────────────────────────────────────────────────────────
-const TABS = ['dashboard','log','history','charts','friends'];
-let currentTab = 'dashboard';
-
-function showTab(tab) {
-  TABS.forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('hidden', t!==tab);
-    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
-  });
-  document.getElementById('fab').classList.toggle('hidden', tab==='log');
-  currentTab = tab;
-  if (tab==='dashboard') renderDashboard();
-  if (tab==='history') renderHistory();
-  if (tab==='charts') renderCharts();
-  if (tab==='friends') renderFriends();
-}
-
-// ── RENDER HEADER ─────────────────────────────────────────────────────────────
-function renderHeader() {
-  const g = data.goal;
-  document.getElementById('profile-name-btn').textContent = data.profile.name || 'Me';
-  document.getElementById('header-sub').textContent = g.raceName + (g.targetDate ? ' · ' + fmtDate(g.targetDate) : ' · Set your race date →');
-  const days = daysUntil(g.targetDate);
-  const badge = document.getElementById('days-badge');
-  if (days !== null) {
-    badge.style.display = 'inline-flex';
-    document.getElementById('days-num').textContent = Math.max(days,0);
-    document.getElementById('days-lbl').textContent = days===1 ? 'day to race day' : 'days to race day';
-  } else {
-    badge.style.display = 'none';
-  }
-}
-
-// ── RENDER DASHBOARD ──────────────────────────────────────────────────────────
-function renderDashboard() {
-  const walks = data.walks;
-  const goalMiles = data.goal.goalMiles || 13.1;
-
-  // Longest
-  const longest = walks.length ? Math.max(...walks.map(w=>w.miles)) : null;
-  document.getElementById('dash-longest').textContent = longest !== null ? longest+' mi' : 'No walks yet';
-  const sub = document.getElementById('dash-longest-sub');
-  if (longest !== null) {
-    const diff = goalMiles - longest;
-    sub.textContent = diff > 0 ? diff.toFixed(1)+' mi still to go to reach '+goalMiles : "You've hit your "+data.goal.raceName+' distance!';
-  } else { sub.textContent = ''; }
-
-  // Stats
-  document.getElementById('dash-week-avg').textContent = weekAvg(walks);
-  document.getElementById('dash-month-avg').textContent = monthAvg(walks);
-
-  const timed = walks.filter(w => totalMins(w)>0 && w.miles>0);
-  if (timed.length) {
-    const mph = (timed.reduce((s,w)=>s+(w.miles/(totalMins(w)/60)),0)/timed.length).toFixed(2);
-    const pace = timed.reduce((s,w)=>s+(totalMins(w)/w.miles),0)/timed.length;
-    document.getElementById('dash-mph').textContent = mph;
-    document.getElementById('dash-pace').textContent = fmtPace(pace);
-  } else {
-    document.getElementById('dash-mph').textContent = '—';
-    document.getElementById('dash-pace').textContent = '—';
-  }
-
-  // Mini bar chart (14 days)
-  const chart = document.getElementById('mini-chart');
-  chart.innerHTML = '';
-  const days14 = [];
-  for (let i=13; i>=0; i--) {
-    const d = new Date(); d.setDate(d.getDate()-i);
-    const key = d.toISOString().slice(0,10);
-    const miles = walks.filter(w=>w.date===key).reduce((s,w)=>s+w.miles,0);
-    days14.push({ label:d.toLocaleDateString('en-US',{weekday:'short'}).slice(0,1), miles, key });
-  }
-  const maxMi = Math.max(...days14.map(d=>d.miles), 1);
-  days14.forEach((d,i) => {
-    const wrap = document.createElement('div'); wrap.className='bar-wrap';
-    const bar = document.createElement('div'); bar.className='bar';
-    bar.style.height = (d.miles/maxMi*60)+'px';
-    bar.style.background = d.miles > 0 ? 'var(--green-mid)' : 'var(--border)';
-    bar.style.minHeight = d.miles > 0 ? '4px' : '0';
-    bar.title = d.miles.toFixed(2)+' mi';
-    const lbl = document.createElement('span'); lbl.className='bar-lbl';
-    lbl.textContent = i%2===0 ? d.label : '';
-    wrap.appendChild(bar); wrap.appendChild(lbl);
-    chart.appendChild(wrap);
-  });
-
-  // Recent walks
-  const sorted = [...walks].sort((a,b)=>b.date.localeCompare(a.date));
-  const el = document.getElementById('recent-walks');
-  if (!sorted.length) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px">No walks yet — tap + to log your first one!</div>';
-  } else {
-    el.innerHTML = sorted.slice(0,3).map(w => walkRowHTML(w, false)).join('');
-  }
-}
-
-function walkRowHTML(w, showEdit) {
-  const dur = fmtDuration(w);
-  const mins = totalMins(w);
-  const mph = mins>0 ? (w.miles/(mins/60)).toFixed(1) : null;
-  const pace = mins>0 ? fmtPace(mins/w.miles) : null;
-  const badges = [dur, mph?mph+' mph':null, pace&&showEdit?pace+'/mi':null].filter(Boolean).map(b=>`<span class="badge">${b}</span>`).join('');
-  const editBtn = showEdit ? `<button class="edit-btn" onclick="openEditWalk('${w.id}')">✏️</button>` : '';
-  return `<div class="walk-row">
-    <div class="walk-dot"></div>
-    <div class="walk-info">
-      <div class="walk-header">
-        <div>
-          <span class="walk-date">${fmtDate(w.date)}</span>
-          <span class="walk-miles" style="margin-left:8px">${w.miles} mi</span>
-        </div>
-        ${editBtn}
-      </div>
-      ${badges ? `<div class="walk-badges">${badges}</div>` : ''}
-      ${w.comment ? `<div class="walk-comment">${w.comment}</div>` : ''}
-    </div>
-  </div>`;
-}
-
-// ── RENDER HISTORY ────────────────────────────────────────────────────────────
-function renderHistory() {
-  const sorted = [...data.walks].sort((a,b)=>b.date.localeCompare(a.date));
-  document.getElementById('history-title').textContent = 'Walk History · '+sorted.length+' walks';
-  const el = document.getElementById('history-list');
-  if (!sorted.length) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:24px">No walks logged yet!</div>';
-  } else {
-    el.innerHTML = sorted.map(w => walkRowHTML(w, true)).join('');
-  }
-}
-
-// ── RENDER CHARTS ─────────────────────────────────────────────────────────────
-function renderCharts() {
-  const walks = data.walks;
-  const goalMiles = data.goal.goalMiles || 13.1;
-
-  // Monthly chart
-  const map = {};
-  walks.forEach(w => { const m=w.date.slice(0,7); map[m]=(map[m]||0)+w.miles; });
-  const keys = Object.keys(map).sort().slice(-6);
-  const mc = document.getElementById('month-chart');
-  if (!keys.length) {
-    mc.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;width:100%">No walks logged yet</div>';
-  } else {
-    const maxM = Math.max(...keys.map(k=>map[k]),1);
-    mc.innerHTML = keys.map(k => {
-      const lbl = new Date(k+'-01').toLocaleDateString('en-US',{month:'short'});
-      const h = (map[k]/maxM*88);
-      return `<div class="month-wrap">
-        <span class="month-val">${map[k].toFixed(1)}</span>
-        <div class="month-bar" style="height:${h}px;background:linear-gradient(180deg,var(--green-dark),var(--green-light));min-height:4px"></div>
-        <span class="month-lbl">${lbl}</span>
-      </div>`;
-    }).join('');
-  }
-
-  // Longest walks
-  const sorted5 = [...walks].sort((a,b)=>b.miles-a.miles).slice(0,5);
-  const lc = document.getElementById('longest-chart');
-  if (!sorted5.length) {
-    lc.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center">No walks yet</div>';
-  } else {
-    const maxL = sorted5[0].miles;
-    lc.innerHTML = sorted5.map((w,i) => `
-      <div class="longest-row">
-        <div class="longest-header">
-          <span class="longest-date ${i===0?'top':''}">${i===0?'🏆 ':''}${fmtDate(w.date)}</span>
-          <span class="longest-miles">${w.miles} mi</span>
-        </div>
-        <div class="longest-track">
-          <div class="longest-fill" style="width:${(w.miles/maxL*100)}%;background:${i===0?'linear-gradient(90deg,var(--green-dark),var(--green-light))':'var(--green-light)'}"></div>
-        </div>
-      </div>`).join('');
-  }
-
-  // Pace stats
-  const timed = walks.filter(w=>totalMins(w)>0&&w.miles>0);
-  const ps = document.getElementById('pace-stats');
-  if (!timed.length) {
-    ps.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:12px">Log walk durations to unlock speed & pace stats</div>';
-  } else {
-    const avgMph = (timed.reduce((s,w)=>s+(w.miles/(totalMins(w)/60)),0)/timed.length).toFixed(2);
-    const avgPace = timed.reduce((s,w)=>s+(totalMins(w)/w.miles),0)/timed.length;
-    const fastMph = Math.max(...timed.map(w=>parseFloat((w.miles/(totalMins(w)/60)).toFixed(2))));
-    const avgWalk = (walks.reduce((s,w)=>s+w.miles,0)/walks.length).toFixed(1);
-    const estH = Math.floor(goalMiles/parseFloat(avgMph));
-    const estM = Math.round((goalMiles/parseFloat(avgMph)%1)*60);
-    ps.innerHTML = `
-      <div class="stat-grid" style="margin-bottom:0">
-        <div class="stat" style="grid-column:1/-1">
-          <div class="stat-val">${avgMph} mph</div>
-          <div class="stat-lbl">average speed</div>
-          <div style="font-size:11px;color:var(--green-mid);margin-top:6px">At this pace, ${goalMiles} mi ≈ ${estH}h ${estM}m</div>
-        </div>
-        <div class="stat"><div class="stat-val">${fmtPace(avgPace)}</div><div class="stat-lbl">avg pace (min/mi)</div></div>
-        <div class="stat"><div class="stat-val">${fastMph}</div><div class="stat-lbl">fastest walk (mph)</div></div>
-        <div class="stat"><div class="stat-val">${avgWalk}</div><div class="stat-lbl">avg walk (mi)</div></div>
-        <div class="stat"><div class="stat-val">${walks.length}</div><div class="stat-lbl">total walks</div></div>
-      </div>`;
-  }
-}
-
-// ── RENDER FRIENDS ────────────────────────────────────────────────────────────
-function renderFriends() {
-  // Friends list
-  const fl = document.getElementById('friends-list');
-  const flCard = document.getElementById('friends-list-card');
-  if (data.friends.length) {
-    flCard.classList.remove('hidden');
-    fl.innerHTML = data.friends.map(f => `
-      <div class="friend-row" id="fr-${f.id}">
-        <div>
-          <div class="friend-name">${f.name}</div>
-          <div class="friend-meta">${f.walks.length} walks · imported ${fmtDate(f.importedAt?.slice(0,10))}</div>
-        </div>
-        <div id="fr-btns-${f.id}">
-          <button class="edit-btn" onclick="confirmRemoveFriend('${f.id}')">🗑️</button>
-        </div>
-      </div>`).join('');
-  } else {
-    flCard.classList.add('hidden');
-  }
-
-  // Comparison table
-  const rows = [calcStats(data.walks, data.profile.name||'Me'), ...data.friends.map(f=>calcStats(f.walks,f.name))];
-  const colors = ['#2d5a3d','#7ab890','#a8c8b0','#c8dfc8','#4a8c5c'];
-  document.getElementById('cmp-title').textContent = 'Group Comparison' + (rows.length>1?' · '+rows.length+' walkers':'');
-  const ct = document.getElementById('comparison-table');
-  if (rows.length===1) {
-    ct.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:12px">Import a friend\'s data above to compare stats 🌿</div>';
-    return;
-  }
-  const metrics = [
-    { key:'totalWalks',     label:'Total Walks',          fmt:v=>v??'—',            hi:true },
-    { key:'walksThisMonth', label:'Walks This Month',     fmt:v=>v??'—',            hi:true },
-    { key:'avgDistMonth',   label:'Avg Distance/Month',   fmt:v=>v?v+' mi':'—',     hi:true },
-    { key:'longest',        label:'Longest Walk',         fmt:v=>v?v+' mi':'—',     hi:true },
-    { key:'avgPace',        label:'Avg Pace (min/mi)',    fmt:v=>v?fmtPace(v):'—',  hi:false },
-  ];
-  function best(key,hi) {
-    const vals = rows.map(r=>r[key]).filter(v=>v!==null&&v!==undefined);
-    if (!vals.length) return null;
-    return hi ? Math.max(...vals) : Math.min(...vals);
-  }
-  ct.innerHTML = `<div style="overflow-x:auto"><table class="cmp-table">
-    <thead><tr>
-      <th class="cmp-stat-lbl">STAT</th>
-      ${rows.map((r,i)=>`<th class="cmp-person">
-        <div class="cmp-avatar" style="background:${colors[i%colors.length]}">${r.name.slice(0,1).toUpperCase()}</div>
-        <div class="cmp-name">${r.name}</div>
-      </th>`).join('')}
-    </tr></thead>
-    <tbody>
-      ${metrics.map((m,mi)=>`<tr class="${mi%2===0?'cmp-row-even':'cmp-row-odd'}">
-        <td class="cmp-stat-lbl">${m.label}</td>
-        ${rows.map(r=>{
-          const v=r[m.key], b=best(m.key,m.hi), isBest=v!==null&&v!==undefined&&v==b;
-          return `<td class="cmp-val${isBest?' best':''}">${m.fmt(v)}${isBest&&rows.length>1?' 🌿':''}</td>`;
-        }).join('')}
-      </tr>`).join('')}
-    </tbody>
-  </table></div>`;
-}
-
-function confirmRemoveFriend(id) {
-  document.getElementById('fr-btns-'+id).innerHTML = `
-    <div class="friend-remove-btns">
-      <button class="fr-cancel" onclick="renderFriends()">Cancel</button>
-      <button class="fr-confirm" onclick="removeFriend('${id}')">Remove</button>
-    </div>`;
-}
-
-function removeFriend(id) {
-  data.friends = data.friends.filter(f=>f.id!==id);
-  save(); renderFriends();
-}
-
-// ── WALK FORM (LOG TAB) ───────────────────────────────────────────────────────
-function clearLogForm() {
-  document.getElementById('log-date').value = today();
-  document.getElementById('log-miles').value = '';
-  document.getElementById('log-hours').value = '';
-  document.getElementById('log-mins').value = '';
-  document.getElementById('log-comment').value = '';
-}
-
-function saveWalk() {
-  const miles = parseFloat(document.getElementById('log-miles').value);
-  const date = document.getElementById('log-date').value;
-  if (!miles || !date) return alert('Please enter a date and distance.');
-  const walk = {
-    id: Date.now().toString(), date,
-    miles,
-    durationHours: parseInt(document.getElementById('log-hours').value)||0,
-    durationMins: parseInt(document.getElementById('log-mins').value)||0,
-    comment: document.getElementById('log-comment').value
-  };
-  data.walks.push(walk);
-  save(); clearLogForm();
-  alert('Walk saved! 🌿');
-}
-
-// ── WALK MODAL (FAB / EDIT) ───────────────────────────────────────────────────
-let editingId = null;
-
-function openWalkModal() {
-  editingId = null;
-  document.getElementById('walk-modal-title').textContent = 'Log a Walk';
-  document.getElementById('modal-date').value = today();
-  document.getElementById('modal-miles').value = '';
-  document.getElementById('modal-hours').value = '';
-  document.getElementById('modal-mins').value = '';
-  document.getElementById('modal-comment').value = '';
-  document.getElementById('delete-section').innerHTML = '';
-  document.getElementById('walk-overlay').classList.remove('hidden');
-}
-
-function openEditWalk(id) {
-  const w = data.walks.find(w=>w.id===id);
-  if (!w) return;
-  editingId = id;
-  document.getElementById('walk-modal-title').textContent = 'Edit Walk';
-  document.getElementById('modal-date').value = w.date;
-  document.getElementById('modal-miles').value = w.miles;
-  document.getElementById('modal-hours').value = w.durationHours||'';
-  document.getElementById('modal-mins').value = w.durationMins||'';
-  document.getElementById('modal-comment').value = w.comment||'';
-  document.getElementById('delete-section').innerHTML = `
-    <button class="btn-danger" onclick="showDeleteConfirm()">🗑️ Delete this walk</button>`;
-  document.getElementById('walk-overlay').classList.remove('hidden');
-}
-
-function showDeleteConfirm() {
-  document.getElementById('delete-section').innerHTML = `
-    <div class="confirm-box">
-      <div class="confirm-msg">Are you sure? This can't be undone.</div>
-      <div class="confirm-btns">
-        <button class="confirm-cancel" onclick="cancelDelete()">Cancel</button>
-        <button class="confirm-ok" onclick="doDelete()">Yes, delete</button>
-      </div>
-    </div>`;
-}
-
-function cancelDelete() {
-  document.getElementById('delete-section').innerHTML = `
-    <button class="btn-danger" onclick="showDeleteConfirm()">🗑️ Delete this walk</button>`;
-}
-
-function doDelete() {
-  data.walks = data.walks.filter(w=>w.id!==editingId);
-  save(); closeWalkModal();
-  if (currentTab==='history') renderHistory();
-  if (currentTab==='dashboard') renderDashboard();
-}
-
-function saveWalkModal() {
-  const miles = parseFloat(document.getElementById('modal-miles').value);
-  const date = document.getElementById('modal-date').value;
-  if (!miles || !date) return alert('Please enter a date and distance.');
-  const walk = {
-    id: editingId || Date.now().toString(), date, miles,
-    durationHours: parseInt(document.getElementById('modal-hours').value)||0,
-    durationMins: parseInt(document.getElementById('modal-mins').value)||0,
-    comment: document.getElementById('modal-comment').value
-  };
-  if (editingId) {
-    data.walks = data.walks.map(w=>w.id===editingId?walk:w);
-  } else {
-    data.walks.push(walk);
-  }
-  save(); closeWalkModal();
-  if (currentTab==='dashboard') renderDashboard();
-  if (currentTab==='history') renderHistory();
-}
-
-function closeWalkModal() { document.getElementById('walk-overlay').classList.add('hidden'); }
-function closeWalkIfBg(e) { if (e.target===document.getElementById('walk-overlay')) closeWalkModal(); }
-
-// ── GOAL MODAL ────────────────────────────────────────────────────────────────
-let goalMilesSelected = 13.1;
-
-function openGoal() {
-  goalMilesSelected = data.goal.goalMiles || 13.1;
-  document.getElementById('goal-date').value = data.goal.targetDate || '';
-  document.getElementById('goal-custom-miles').value = '';
-  document.getElementById('goal-custom-name').value = data.goal.raceName || '';
-  renderPresets();
-  document.getElementById('goal-overlay').classList.remove('hidden');
-}
-
-function renderPresets() {
-  document.getElementById('preset-grid').innerHTML = PRESETS.map(p => {
-    const sel = p.miles === null ? goalMilesSelected === null : goalMilesSelected === p.miles;
-    return `<button class="preset-btn${sel?' selected':''}" onclick="selectPreset(${JSON.stringify(p.miles)}, '${p.label}')">
-      <div>${p.label}</div>
-      ${p.miles!==null?`<div class="preset-sub">${p.miles} mi</div>`:''}
-    </button>`;
-  }).join('');
-  document.getElementById('custom-fields').classList.toggle('hidden', goalMilesSelected !== null);
-}
-
-function selectPreset(miles, label) {
-  goalMilesSelected = miles;
-  if (miles !== null) document.getElementById('goal-custom-name').value = label;
-  renderPresets();
-}
-
-function saveGoal() {
-  const finalMiles = goalMilesSelected === null ? (parseFloat(document.getElementById('goal-custom-miles').value)||13.1) : goalMilesSelected;
-  data.goal = {
-    targetDate: document.getElementById('goal-date').value,
-    raceName: document.getElementById('goal-custom-name').value || 'Half Marathon',
-    goalMiles: finalMiles
-  };
-  save(); closeGoal(); renderHeader();
-  if (currentTab==='dashboard') renderDashboard();
-}
-
-function closeGoal() { document.getElementById('goal-overlay').classList.add('hidden'); }
-function closeGoalIfBg(e) { if (e.target===document.getElementById('goal-overlay')) closeGoal(); }
-
-// ── PROFILE MODAL ─────────────────────────────────────────────────────────────
-function openProfile() {
-  document.getElementById('profile-name-input').value = data.profile.name || 'Me';
-  document.getElementById('profile-overlay').classList.remove('hidden');
-}
-
-function saveProfile() {
-  data.profile.name = document.getElementById('profile-name-input').value || 'Me';
-  save(); closeProfile(); renderHeader();
-}
-
-function closeProfile() { document.getElementById('profile-overlay').classList.add('hidden'); }
-function closeProfileIfBg(e) { if (e.target===document.getElementById('profile-overlay')) closeProfile(); }
-
-// ── EXPORT / IMPORT ───────────────────────────────────────────────────────────
-function exportData() {
-  const payload = { version:1, name:data.profile.name||'Me', exportedAt:new Date().toISOString(), walks:data.walks };
-  const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = (data.profile.name||'walkwithme').replace(/\s+/g,'-').toLowerCase()+'-walks.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function handleImport(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const err = document.getElementById('import-error');
-  const ok = document.getElementById('import-success');
-  err.classList.add('hidden'); ok.classList.add('hidden');
-  const reader = new FileReader();
-  reader.onload = evt => {
-    try {
-      const payload = JSON.parse(evt.target.result);
-      if (!payload.walks || !Array.isArray(payload.walks)) throw new Error('bad');
-      const name = payload.name || 'Friend';
-      data.friends = [...data.friends.filter(f=>f.name!==name), { id:Date.now().toString(), name, importedAt:new Date().toISOString(), walks:payload.walks }];
-      save();
-      ok.textContent = '✅ '+name+"'s data imported!";
-      ok.classList.remove('hidden');
-      renderFriends();
-    } catch {
-      err.textContent = "Couldn't read that file. Make sure it's a Walk With Me export.";
-      err.classList.remove('hidden');
-    }
-    e.target.value = '';
-  };
-  reader.readAsText(file);
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-document.getElementById('log-date').value = today();
 renderHeader();
 renderDashboard();
 </script>
