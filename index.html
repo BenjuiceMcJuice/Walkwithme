@@ -2,72 +2,902 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>Walk With Me 🌿</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Walk With Me</title>
 <style>
-  :root {
-    --green-dark: #2d5a3d;
-    --green-mid: #4a8c5c;
-    --green-light: #7ab890;
-    --green-pale: #e8f4ec;
-    --green-bg: #f0f7f2;
-    --bg: #f5f7f4;
-    --white: #ffffff;
-    --text: #2d3b2f;
-    --muted: #8aa89a;
-    --border: #e8ede9;
-    --red: #c0504a;
-    --red-pale: #fff5f5;
-    --red-border: #f0d0d0;
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:#f5f7f4;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#2d3b2f;}
+#app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;}
+.hdr{background:linear-gradient(135deg,#2d5a3d 0%,#4a8c5c 60%,#7ab890 100%);padding:28px 24px 20px;color:#fff;}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.hdr-title{font-size:22px;font-weight:700;letter-spacing:-0.3px;margin:0 0 2px;}
+.hdr-sub{font-size:13px;opacity:0.8;}
+.hdr-btns{display:flex;gap:6px;flex-shrink:0;}
+.hdr-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;font-weight:600;}
+.days-badge{margin-top:14px;background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;display:inline-flex;align-items:baseline;gap:6px;}
+.days-num{font-size:30px;font-weight:700;}
+.days-lbl{font-size:13px;opacity:0.9;}
+.nav{display:flex;background:#fff;border-bottom:1px solid #e8ede9;position:sticky;top:0;z-index:10;}
+.nav-btn{flex:1;padding:12px 2px;border:none;background:none;cursor:pointer;font-size:10px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#8aa89a;border-bottom:2px solid transparent;}
+.nav-btn.active{color:#4a8c5c;border-bottom-color:#4a8c5c;}
+.content{padding:16px 16px 100px;}
+.tab{display:none;}
+.tab.active{display:block;}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(45,90,61,0.08);margin-bottom:12px;}
+.card-title{font-size:12px;font-weight:600;color:#8aa89a;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat{background:#f5f7f4;border-radius:12px;padding:14px 12px;text-align:center;}
+.stat-val{font-size:22px;font-weight:700;color:#2d5a3d;line-height:1;}
+.stat-lbl{font-size:11px;color:#8aa89a;margin-top:4px;font-weight:500;line-height:1.3;}
+.top-stats{background:#fff;border-radius:16px;padding:16px 18px 14px;box-shadow:0 2px 12px rgba(45,90,61,0.08);margin-bottom:12px;}
+.longest-block{border-bottom:1px solid #f0f4f1;padding-bottom:12px;margin-bottom:12px;}
+.longest-label{font-size:11px;color:#8aa89a;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
+.longest-value{font-size:28px;font-weight:700;color:#2d5a3d;line-height:1.1;}
+.longest-sub{font-size:12px;color:#8aa89a;margin-top:3px;}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;}
+.mini-stat{text-align:center;}
+.mini-val{display:block;font-size:16px;font-weight:700;color:#2d5a3d;line-height:1;}
+.mini-lbl{display:block;font-size:10px;color:#8aa89a;margin-top:3px;font-weight:500;}
+.walk-row{padding:14px 0;border-bottom:1px solid #f0f4f1;display:flex;gap:12px;align-items:flex-start;}
+.walk-dot{width:9px;height:9px;border-radius:50%;background:#4a8c5c;margin-top:5px;flex-shrink:0;}
+.walk-info{flex:1;}
+.walk-top{display:flex;justify-content:space-between;align-items:center;}
+.walk-date{font-weight:600;font-size:14px;}
+.walk-mi{font-weight:700;color:#2d5a3d;font-size:15px;}
+.badges{margin-top:4px;display:flex;flex-wrap:wrap;gap:2px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;background:#e8f4ec;color:#2d5a3d;font-size:11px;font-weight:600;margin-right:2px;}
+.walk-note{font-size:12px;color:#8aa89a;margin-top:3px;}
+.edit-btn{background:none;border:none;cursor:pointer;font-size:16px;margin-left:8px;flex-shrink:0;}
+.lbl{font-size:12px;font-weight:600;color:#8aa89a;letter-spacing:0.5px;text-transform:uppercase;display:block;margin-bottom:6px;}
+.inp{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #e8ede9;font-size:15px;color:#2d3b2f;outline:none;margin-bottom:14px;background:#fafbfa;-webkit-appearance:none;appearance:none;}
+.inp:focus{border-color:#4a8c5c;background:#fff;}
+textarea.inp{resize:none;}
+.dur-row{display:flex;gap:10px;margin-bottom:14px;}
+.dur-wrap{flex:1;position:relative;}
+.dur-wrap input{width:100%;padding:12px 38px 12px 14px;border-radius:10px;border:1.5px solid #e8ede9;font-size:15px;color:#2d3b2f;outline:none;background:#fafbfa;-webkit-appearance:none;appearance:none;}
+.dur-wrap input:focus{border-color:#4a8c5c;background:#fff;}
+.dur-unit{position:absolute;right:12px;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);font-size:12px;color:#8aa89a;font-weight:600;pointer-events:none;}
+.btn{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#2d5a3d,#4a8c5c);border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer;}
+.btn-sec{width:100%;padding:13px;border-radius:12px;background:none;border:1.5px solid #e8ede9;color:#8aa89a;font-size:14px;cursor:pointer;margin-top:8px;}
+.btn-grn{width:100%;padding:13px;border-radius:12px;background:#e8f4ec;border:none;color:#2d5a3d;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;}
+.btn-red{width:100%;padding:13px;border-radius:12px;background:none;border:1.5px solid #f0d0d0;color:#c0504a;font-size:14px;cursor:pointer;margin-top:8px;font-weight:600;}
+.confirm-box{margin-top:8px;background:#fff5f5;border-radius:12px;padding:14px;border:1.5px solid #f0d0d0;}
+.confirm-msg{font-size:13px;color:#c0504a;font-weight:600;margin-bottom:10px;text-align:center;}
+.confirm-row{display:flex;gap:8px;}
+.confirm-no{flex:1;padding:10px;border-radius:10px;background:none;border:1.5px solid #e8ede9;color:#8aa89a;font-size:13px;cursor:pointer;font-weight:600;}
+.confirm-yes{flex:1;padding:10px;border-radius:10px;background:#c0504a;border:none;color:#fff;font-size:13px;cursor:pointer;font-weight:700;}
+.fab{position:fixed;bottom:24px;right:16px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2d5a3d,#4a8c5c);border:none;color:#fff;font-size:26px;cursor:pointer;box-shadow:0 4px 20px rgba(45,90,61,0.35);display:flex;align-items:center;justify-content:center;z-index:100;line-height:1;}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-end;justify-content:center;z-index:200;}
+.sheet{background:#fff;border-radius:20px 20px 0 0;padding:24px 24px 40px;width:100%;max-width:480px;box-shadow:0 -8px 40px rgba(0,0,0,0.15);max-height:92vh;overflow-y:auto;}
+.sheet-title{font-size:18px;font-weight:700;color:#2d5a3d;margin-bottom:20px;}
+.sheet-desc{font-size:13px;color:#8aa89a;margin-bottom:16px;line-height:1.5;}
+.bar-chart{display:flex;align-items:flex-end;gap:3px;height:90px;padding:0 2px;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;}
+.bar{width:100%;border-radius:3px 3px 0 0;flex-shrink:0;}
+.bar-lbl{font-size:9px;color:#8aa89a;display:block;text-align:center;height:14px;line-height:14px;margin-top:2px;flex-shrink:0;}
+.mchart{display:flex;align-items:flex-end;gap:8px;height:130px;padding:0 8px;}
+.mwrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.mbar{width:100%;border-radius:4px 4px 0 0;}
+.mval{font-size:10px;color:#4a8c5c;font-weight:600;}
+.mlbl{font-size:11px;color:#8aa89a;}
+.lrow{margin-bottom:12px;}
+.lhdr{display:flex;justify-content:space-between;margin-bottom:5px;}
+.ldate{font-size:12px;color:#2d3b2f;}
+.ldate.top{font-weight:700;}
+.lmi{font-size:13px;font-weight:700;color:#2d5a3d;}
+.ltrack{background:#e8f0e9;border-radius:4px;height:7px;overflow:hidden;}
+.lfill{height:100%;border-radius:4px;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.pbtn{padding:10px 8px;border-radius:10px;border:1.5px solid #e8ede9;background:#fafbfa;color:#8aa89a;font-weight:500;font-size:13px;cursor:pointer;text-align:center;}
+.pbtn.sel{border-color:#4a8c5c;background:#e8f4ec;color:#2d5a3d;font-weight:700;}
+.psub{font-size:11px;opacity:0.7;margin-top:2px;}
+.ctable{width:100%;border-collapse:collapse;font-size:13px;}
+.ctable th,.ctable td{padding:10px 6px;}
+.ctable thead th{border-bottom:2px solid #e8f0e9;}
+.cslbl{text-align:left;font-size:11px;color:#8aa89a;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;min-width:100px;}
+.cperson{text-align:center;min-width:70px;}
+.cavatar{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;margin-bottom:4px;}
+.cname{font-size:11px;color:#2d3b2f;font-weight:700;}
+.cval{font-weight:400;color:#8aa89a;font-size:13px;text-align:center;}
+.cval.best{font-weight:700;color:#2d5a3d;font-size:14px;}
+.frow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f4f1;}
+.fname{font-weight:600;font-size:14px;}
+.fmeta{font-size:11px;color:#8aa89a;}
+.fr-row{display:flex;gap:6px;}
+.fr-no{padding:5px 10px;border-radius:8px;border:1px solid #e8ede9;background:none;color:#8aa89a;font-size:12px;cursor:pointer;}
+.fr-yes{padding:5px 10px;border-radius:8px;border:none;background:#c0504a;color:#fff;font-size:12px;cursor:pointer;font-weight:600;}
+.msg-err{background:#fff0f0;border:1px solid #f0d0d0;border-radius:8px;padding:10px 12px;font-size:13px;color:#c0504a;margin-bottom:12px;display:none;}
+.msg-ok{background:#e8f4ec;border:1px solid #c8e0cc;border-radius:8px;padding:10px 12px;font-size:13px;color:#2d5a3d;font-weight:600;margin-bottom:12px;display:none;}
+.hidden{display:none!important;}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.see-all{font-size:12px;color:#4a8c5c;background:none;border:none;cursor:pointer;font-weight:600;}
+.ins-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f4f1;}
+.ins-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.ins-body{font-size:13px;color:#2d3b2f;line-height:1.5;flex:1;}
+.ins-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+.tgreat{background:#e8f4ec;color:#2d5a3d;}
+.ttip{background:#fff8e8;color:#8a6a00;}
+.twarn{background:#fff0f0;color:#c0504a;}
+.tinfo{background:#f0f4ff;color:#4a5c8c;}
+.srow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <h1 class="hdr-title">&#127807; Walk With Me</h1>
+      <p class="hdr-sub" id="hdr-sub">Half Marathon &middot; Set your race date &rarr;</p>
+    </div>
+    <div class="hdr-btns">
+      <button class="hdr-btn" id="profile-btn" onclick="openProfile()">&#128100; Me</button>
+      <button class="hdr-btn" onclick="openGoal()">&#127919;</button>
+    </div>
+  </div>
+  <div class="days-badge hidden" id="days-badge">
+    <span class="days-num" id="days-num">0</span>
+    <span class="days-lbl" id="days-lbl">days to race day</span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" id="nav-dashboard" onclick="showTab('dashboard')">Dashboard</button>
+  <button class="nav-btn" id="nav-log" onclick="showTab('log')">Log Walk</button>
+  <button class="nav-btn" id="nav-history" onclick="showTab('history')">History</button>
+  <button class="nav-btn" id="nav-charts" onclick="showTab('charts')">Charts</button>
+  <button class="nav-btn" id="nav-friends" onclick="showTab('friends')">Friends</button>
+</div>
+
+<div class="content">
+
+  <div class="tab active" id="tab-dashboard">
+    <div class="top-stats">
+      <div class="longest-block">
+        <div class="longest-label">Longest Walk So Far</div>
+        <div class="longest-value" id="d-longest">No walks yet</div>
+        <div class="longest-sub" id="d-longest-sub"></div>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat"><span class="mini-val" id="d-wavg">0.00</span><span class="mini-lbl">mi/day (7d)</span></div>
+        <div class="mini-stat"><span class="mini-val" id="d-mavg">0.00</span><span class="mini-lbl">mi/day (30d)</span></div>
+        <div class="mini-stat"><span class="mini-val" id="d-mph">&#8212;</span><span class="mini-lbl">mph avg</span></div>
+        <div class="mini-stat"><span class="mini-val" id="d-pace">&#8212;</span><span class="mini-lbl">min/mi</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Last 14 Days</div>
+      <div class="bar-chart" id="minichart"></div>
+    </div>
+    <div class="card">
+      <div class="srow">
+        <div class="card-title" style="margin-bottom:0">Your Insights</div>
+        <button class="see-all" onclick="renderInsights()">&#8635; Refresh</button>
+      </div>
+      <div id="ins-list"></div>
+    </div>
+    <div class="card">
+      <div class="sec-hdr">
+        <div class="card-title">Recent Walks</div>
+        <button class="see-all" onclick="showTab('history')">See all &rarr;</button>
+      </div>
+      <div id="recent-list"></div>
+    </div>
+  </div>
+
+  <div class="tab hidden" id="tab-log">
+    <div class="card">
+      <div class="sheet-title">Log a Walk</div>
+      <label class="lbl">Date</label>
+      <input type="date" class="inp" id="l-date"/>
+      <label class="lbl">Distance (miles)</label>
+      <input type="number" step="0.01" placeholder="e.g. 2.5" class="inp" id="l-miles"/>
+      <label class="lbl">Duration &middot; optional</label>
+      <div class="dur-row">
+        <div class="dur-wrap"><input type="number" min="0" max="24" placeholder="0" id="l-hrs"/><span class="dur-unit">hrs</span></div>
+        <div class="dur-wrap"><input type="number" min="0" max="59" placeholder="0" id="l-mins"/><span class="dur-unit">min</span></div>
+      </div>
+      <label class="lbl">Notes &middot; optional</label>
+      <textarea class="inp" rows="3" placeholder="How did it feel?" id="l-note"></textarea>
+      <div class="msg-err" id="log-err"></div>
+      <div class="msg-ok" id="log-ok">Walk saved! &#127807;</div>
+      <button class="btn" onclick="saveLogWalk()">Save Walk &#127807;</button>
+      <button class="btn-sec" onclick="clearLog()">Clear</button>
+    </div>
+  </div>
+
+  <div class="tab hidden" id="tab-history">
+    <div class="card">
+      <div class="card-title" id="hist-title">Walk History</div>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+
+  <div class="tab hidden" id="tab-charts">
+    <div class="card"><div class="card-title">Monthly Miles</div><div class="mchart" id="mchart"></div></div>
+    <div class="card"><div class="card-title">Top 5 Longest Walks</div><div id="lchart"></div></div>
+    <div class="card"><div class="card-title">Speed &amp; Pace</div><div id="pstats"></div></div>
+  </div>
+
+  <div class="tab hidden" id="tab-friends">
+    <div class="card">
+      <div class="card-title">Share Your Data</div>
+      <p class="sheet-desc">Export your walks and send via WhatsApp. Friends can import to compare.</p>
+      <button class="btn-grn" onclick="exportData()">&#128228; Export My Walks</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Import a Friend</div>
+      <p class="sheet-desc">Tap below to import a friend's exported file and compare stats.</p>
+      <div class="msg-err" id="imp-err"></div>
+      <div class="msg-ok" id="imp-ok"></div>
+      <input type="file" accept=".json" id="file-inp" style="display:none" onchange="handleImport(event)"/>
+      <button class="btn-grn" onclick="document.getElementById('file-inp').click()">&#128229; Import Friend's File</button>
+    </div>
+    <div class="card hidden" id="friends-card">
+      <div class="card-title">Imported Friends</div>
+      <div id="friends-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-title" id="cmp-title">Group Comparison</div>
+      <div id="cmp-table"></div>
+    </div>
+  </div>
+
+</div>
+
+<button class="fab" id="fab" onclick="openWalkModal()">+</button>
+
+<div class="overlay hidden" id="walk-ov" onclick="walkBgClick(event)">
+  <div class="sheet">
+    <div class="sheet-title" id="wm-title">Log a Walk</div>
+    <label class="lbl">Date</label>
+    <input type="date" class="inp" id="m-date"/>
+    <label class="lbl">Distance (miles)</label>
+    <input type="number" step="0.01" placeholder="e.g. 2.5" class="inp" id="m-miles"/>
+    <label class="lbl">Duration &middot; optional</label>
+    <div class="dur-row">
+      <div class="dur-wrap"><input type="number" min="0" max="24" placeholder="0" id="m-hrs"/><span class="dur-unit">hrs</span></div>
+      <div class="dur-wrap"><input type="number" min="0" max="59" placeholder="0" id="m-mins"/><span class="dur-unit">min</span></div>
+    </div>
+    <label class="lbl">Notes &middot; optional</label>
+    <textarea class="inp" rows="3" placeholder="How did it feel?" id="m-note"></textarea>
+    <div class="msg-err" id="modal-err"></div>
+    <button class="btn" onclick="saveModalWalk()">Save Walk &#127807;</button>
+    <button class="btn-sec" onclick="closeWalkModal()">Cancel</button>
+    <div id="del-section"></div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="goal-ov" onclick="goalBgClick(event)">
+  <div class="sheet">
+    <div class="sheet-title">Race Goal</div>
+    <label class="lbl">Race Type</label>
+    <div class="pgrid" id="pgrid"></div>
+    <div id="custom-flds" class="hidden">
+      <label class="lbl">Custom Distance (miles)</label>
+      <input type="number" step="0.1" placeholder="e.g. 10.0" class="inp" id="g-custmi"/>
+      <label class="lbl">Event Name</label>
+      <input type="text" class="inp" id="g-custname" placeholder="e.g. My Big Walk"/>
+    </div>
+    <label class="lbl">Target Date</label>
+    <input type="date" class="inp" id="g-date"/>
+    <button class="btn" onclick="saveGoal()">Save Goal &#127919;</button>
+    <button class="btn-sec" onclick="closeGoal()">Cancel</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="prof-ov" onclick="profBgClick(event)">
+  <div class="sheet">
+    <div class="sheet-title">Your Name</div>
+    <p class="sheet-desc">This name shows in friend comparisons when you export.</p>
+    <label class="lbl">Display Name</label>
+    <input type="text" class="inp" id="p-name" placeholder="e.g. Sarah"/>
+    <button class="btn" onclick="saveProfile()">Save</button>
+    <button class="btn-sec" onclick="closeProfile()">Cancel</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+var SKEY = 'wwm_data_v3';
+var TABS = ['dashboard','log','history','charts','friends'];
+var PRESETS = [
+  {label:'5K',miles:3.1},
+  {label:'10K',miles:6.2},
+  {label:'Half Marathon',miles:13.1},
+  {label:'Marathon',miles:26.2},
+  {label:'Custom',miles:null}
+];
+var COLORS = ['#2d5a3d','#7ab890','#a8c8b0','#c8dfc8','#4a8c5c'];
+var currentTab = 'dashboard';
+var editingId = null;
+var goalSel = 13.1;
+var appData = loadData();
+
+function loadData() {
+  var def = {profile:{name:'Me'},goal:{targetDate:'',raceName:'Half Marathon',goalMiles:13.1},walks:[],friends:[]};
+  try {
+    var raw = localStorage.getItem(SKEY);
+    if (!raw) return def;
+    var d = JSON.parse(raw);
+    return {
+      profile:d.profile || {name:'Me'},
+      goal:d.goal || def.goal,
+      walks:d.walks || [],
+      friends:d.friends || []
+    };
+  } catch(e) { return def; }
+}
+
+function save() {
+  try { localStorage.setItem(SKEY, JSON.stringify(appData)); } catch(e) {}
+}
+
+function today() {
+  var d = new Date();
+  var mm = d.getMonth()+1;
+  var dd = d.getDate();
+  return d.getFullYear()+'-'+(mm<10?'0'+mm:mm)+'-'+(dd<10?'0'+dd:dd);
+}
+
+function fmtDate(s) {
+  if (!s) return '';
+  var p = s.split('-');
+  var d = new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+  var mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return mo[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+}
+
+function daysUntil(s) {
+  if (!s) return null;
+  var p = s.split('-');
+  var t = new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+  var n = new Date(); n.setHours(0,0,0,0);
+  return Math.ceil((t.getTime()-n.getTime())/86400000);
+}
+
+function totalMins(w) {
+  return (w.durationHours||0)*60+(w.durationMins||0);
+}
+
+function fmtDur(w) {
+  var h=w.durationHours||0, m=w.durationMins||0;
+  if (!h&&!m) return '';
+  if (h&&m) return h+'h '+m+'m';
+  return h?h+'h':m+'m';
+}
+
+function fmtPace(mpm) {
+  if (!mpm||isNaN(mpm)||mpm<=0) return '--';
+  var m=Math.floor(mpm);
+  var s=Math.round((mpm-m)*60);
+  return m+':'+(s<10?'0'+s:s);
+}
+
+function wAvg(walks) {
+  var cut=new Date(); cut.setDate(cut.getDate()-7);
+  var tot=0;
+  for (var i=0;i<walks.length;i++) {
+    var p=walks[i].date.split('-');
+    if (new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]))>=cut) tot+=walks[i].miles;
   }
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { background:var(--bg); font-family:'DM Sans',sans-serif; color:var(--text); }
-  #app { max-width:480px; margin:0 auto; min-height:100vh; position:relative; }
+  return (tot/7).toFixed(2);
+}
 
-  /* HEADER */
-  .header { background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 60%,var(--green-light) 100%); padding:28px 24px 20px; color:white; }
-  .header-top { display:flex; justify-content:space-between; align-items:flex-start; }
-  .header-title { font-family:'Lora',serif; font-size:22px; font-weight:700; letter-spacing:-0.3px; margin:0 0 2px; }
-  .header-sub { font-size:13px; opacity:0.8; }
-  .header-btns { display:flex; gap:6px; flex-shrink:0; }
-  .header-btn { background:rgba(255,255,255,0.2); border:none; color:white; border-radius:8px; padding:6px 10px; font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600; }
-  .days-badge { margin-top:14px; background:rgba(255,255,255,0.15); border-radius:12px; padding:10px 16px; display:inline-flex; align-items:baseline; gap:6px; }
-  .days-num { font-size:30px; font-weight:700; font-family:'Lora',serif; }
-  .days-lbl { font-size:13px; opacity:0.9; }
+function mAvg(walks) {
+  var cut=new Date(); cut.setDate(cut.getDate()-30);
+  var tot=0;
+  for (var i=0;i<walks.length;i++) {
+    var p=walks[i].date.split('-');
+    if (new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]))>=cut) tot+=walks[i].miles;
+  }
+  return (tot/30).toFixed(2);
+}
 
-  /* NAV */
-  .nav { display:flex; background:white; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
-  .nav-btn { flex:1; padding:12px 2px; border:none; background:none; cursor:pointer; font-size:10px; font-weight:600; letter-spacing:0.3px; text-transform:uppercase; color:var(--muted); border-bottom:2px solid transparent; transition:all 0.2s; font-family:'DM Sans',sans-serif; }
-  .nav-btn.active { color:var(--green-mid); border-bottom-color:var(--green-mid); }
+function getDate(s) {
+  var p=s.split('-');
+  return new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+}
 
-  /* CONTENT */
-  .content { padding:16px 16px 100px; }
+function showTab(tab) {
+  for (var i=0;i<TABS.length;i++) {
+    var t=document.getElementById('tab-'+TABS[i]);
+    var b=document.getElementById('nav-'+TABS[i]);
+    if (t) t.className=TABS[i]===tab?'tab active':'tab hidden';
+    if (b) b.className=TABS[i]===tab?'nav-btn active':'nav-btn';
+  }
+  var fab=document.getElementById('fab');
+  if (fab) fab.className=tab==='log'?'fab hidden':'fab';
+  currentTab=tab;
+  if (tab==='dashboard') renderDashboard();
+  if (tab==='history') renderHistory();
+  if (tab==='charts') renderCharts();
+  if (tab==='friends') renderFriends();
+}
 
-  /* CARD */
-  .card { background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(45,90,61,0.08); margin-bottom:12px; }
-  .card-title { font-family:'Lora',serif; font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; }
+function renderHeader() {
+  var g=appData.goal;
+  var nb=document.getElementById('profile-btn');
+  if (nb) nb.innerHTML='&#128100; '+(appData.profile.name||'Me');
+  var sub=document.getElementById('hdr-sub');
+  if (sub) sub.innerHTML=g.raceName+(g.targetDate?' &middot; '+fmtDate(g.targetDate):' &middot; Set your race date &rarr;');
+  var days=daysUntil(g.targetDate);
+  var badge=document.getElementById('days-badge');
+  if (badge) {
+    if (days!==null) {
+      badge.className='days-badge';
+      document.getElementById('days-num').textContent=days<0?'0':String(days);
+      document.getElementById('days-lbl').textContent=days===1?'day to race day':'days to race day';
+    } else {
+      badge.className='days-badge hidden';
+    }
+  }
+}
 
-  /* STAT GRID */
-  .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-  .stat { background:var(--bg); border-radius:12px; padding:14px 12px; text-align:center; }
-  .stat.hero { grid-column:1/-1; display:flex; align-items:center; gap:16px; text-align:left; padding:18px 20px; background:var(--green-bg); }
-  .stat-val { font-family:'Lora',serif; font-size:22px; font-weight:700; color:var(--green-dark); line-height:1; }
-  .stat-lbl { font-size:11px; color:var(--muted); margin-top:4px; font-weight:500; line-height:1.3; }
-  .hero-icon { font-size:38px; line-height:1; flex-shrink:0; }
-  .hero-val { font-family:'Lora',serif; font-size:34px; font-weight:700; color:var(--green-dark); line-height:1.1; }
-  .hero-sub { font-size:12px; color:var(--muted); margin-top:3px; }
-  .hero-lbl { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.8px; }
+function renderDashboard() {
+  var walks=appData.walks;
+  var goalMiles=appData.goal.goalMiles||13.1;
+  var longest=0;
+  for (var i=0;i<walks.length;i++) if (walks[i].miles>longest) longest=walks[i].miles;
+  var dl=document.getElementById('d-longest');
+  var ds=document.getElementById('d-longest-sub');
+  if (walks.length===0) {
+    if (dl) dl.textContent='No walks yet';
+    if (ds) ds.textContent='';
+  } else {
+    if (dl) dl.textContent=longest+' mi';
+    if (ds) {
+      var diff=goalMiles-longest;
+      ds.textContent=diff>0?diff.toFixed(1)+' mi still to go to reach '+goalMiles:'You have hit your '+appData.goal.raceName+' distance!';
+    }
+  }
+  var dw=document.getElementById('d-wavg'); if (dw) dw.textContent=wAvg(walks);
+  var dm=document.getElementById('d-mavg'); if (dm) dm.textContent=mAvg(walks);
+  var timed=[];
+  for (var i=0;i<walks.length;i++) if (totalMins(walks[i])>0&&walks[i].miles>0) timed.push(walks[i]);
+  if (timed.length) {
+    var sumMph=0;
+    for (var i=0;i<timed.length;i++) sumMph+=timed[i].miles/(totalMins(timed[i])/60);
+    var avgMph=(sumMph/timed.length).toFixed(2);
+    var sumPace=0;
+    for (var i=0;i<timed.length;i++) sumPace+=totalMins(timed[i])/timed[i].miles;
+    var avgPace=sumPace/timed.length;
+    var em=document.getElementById('d-mph'); if (em) em.textContent=avgMph;
+    var ep=document.getElementById('d-pace'); if (ep) ep.textContent=fmtPace(avgPace);
+  } else {
+    var em=document.getElementById('d-mph'); if (em) em.innerHTML='&#8212;';
+    var ep=document.getElementById('d-pace'); if (ep) ep.innerHTML='&#8212;';
+  }
+  var mc=document.getElementById('minichart');
+  if (mc) {
+    mc.innerHTML='';
+    var dn=['S','M','T','W','T','F','S'];
+    var days14=[];
+    for (var i=13;i>=0;i--) {
+      var d=new Date(); d.setDate(d.getDate()-i);
+      var yr=d.getFullYear(),mo=d.getMonth()+1,dy=d.getDate();
+      var key=yr+'-'+(mo<10?'0'+mo:mo)+'-'+(dy<10?'0'+dy:dy);
+      var mi=0;
+      for (var j=0;j<walks.length;j++) if (walks[j].date===key) mi+=walks[j].miles;
+      days14.push({mi:mi,lbl:i%2===0?dn[d.getDay()]:'',idx:i,d:new Date(d)});
+    }
+    var maxMi=0.01;
+    for (var i=0;i<days14.length;i++) if (days14[i].mi>maxMi) maxMi=days14[i].mi;
+    for (var i=0;i<days14.length;i++) {
+      var wrap=document.createElement('div'); wrap.className='bar-wrap';
+      var bar=document.createElement('div'); bar.className='bar';
+      var h=days14[i].mi>0?Math.max(Math.round((days14[i].mi/maxMi)*60),4):0;
+      bar.style.height=h+'px';
+      bar.style.background=days14[i].mi>0?'#4a8c5c':'#e8f0e9';
+      var lbl=document.createElement('span'); lbl.className='bar-lbl';
+      lbl.textContent=days14[i].lbl;
+      wrap.appendChild(bar); wrap.appendChild(lbl);
+      mc.appendChild(wrap);
+    }
+  }
+  renderInsights();
+  var rl=document.getElementById('recent-list');
+  if (rl) {
+    var sorted=walks.slice().sort(function(a,b){return b.date>a.date?1:-1;});
+    if (!sorted.length) {
+      rl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:16px">No walks yet &mdash; tap + to log your first one!</div>';
+    } else {
+      var html='';
+      for (var i=0;i<Math.min(3,sorted.length);i++) html+=walkRowHTML(sorted[i],false);
+      rl.innerHTML=html;
+    }
+  }
+}
 
-  /* WALK ROW */
-  .walk-row { padding:14px 0; border-bottom:1px solid #f0f4f1; display:flex; gap:12px; align-items:flex-start; }
-  .walk-row:last-child { border-bottom:none; }
-  .walk-dot { width:9px; height:9px; border-radius:50%; background:var(--green-mid); margin-top:5px; flex-shrink:0; }
-  .walk-info { flex:1; }
-  .walk-header { display:flex; justify-content:space-between; align-items:center; }
-  .walk-date { font-weight:600; font-size:14px; }
-  .walk-miles { font-family:'Lora',serif; font-weight:700; color:var(--green-dark); font-size:15px; }
-  .walk-badges { margin-top:4px; display:flex; flex-wrap:wrap; gap:2px; }
+function walkRowHTML(w,showEdit) {
+  var dur=fmtDur(w);
+  var mins=totalMins(w);
+  var mph=mins>0?(w.miles/(mins/60)).toFixed(1):'';
+  var pace=mins>0?fmtPace(mins/w.miles):'';
+  var badges='';
+  if (dur) badges+='<span class="badge">'+dur+'</span>';
+  if (mph) badges+='<span class="badge">'+mph+' mph</span>';
+  if (pace&&showEdit) badges+='<span class="badge">'+pace+'/mi</span>';
+  var editBtn=showEdit?'<button class="edit-btn" onclick="openEditWalk(\''+w.id+'\')">&#9999;&#65039;</button>':'';
+  var note=w.comment?'<div class="walk-note">'+w.comment+'</div>':'';
+  return '<div class="walk-row"><div class="walk-dot"></div><div class="walk-info"><div class="walk-top"><div><span class="walk-date">'+fmtDate(w.date)+'</span> <span class="walk-mi">'+w.miles+' mi</span></div>'+editBtn+'</div>'+(badges?'<div class="badges">'+badges+'</div>':'')+note+'</div></div>';
+}
+
+function renderHistory() {
+  var sorted=appData.walks.slice().sort(function(a,b){return b.date>a.date?1:-1;});
+  var ht=document.getElementById('hist-title');
+  if (ht) ht.textContent='Walk History - '+sorted.length+' walks';
+  var hl=document.getElementById('hist-list');
+  if (!hl) return;
+  if (!sorted.length) { hl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:24px">No walks logged yet!</div>'; return; }
+  var html='';
+  for (var i=0;i<sorted.length;i++) html+=walkRowHTML(sorted[i],true);
+  hl.innerHTML=html;
+}
+
+function renderCharts() {
+  var walks=appData.walks;
+  var goalMiles=appData.goal.goalMiles||13.1;
+  var map={};
+  for (var i=0;i<walks.length;i++) { var m=walks[i].date.slice(0,7); map[m]=(map[m]||0)+walks[i].miles; }
+  var keys=Object.keys(map).sort().slice(-6);
+  var mc=document.getElementById('mchart');
+  if (mc) {
+    if (!keys.length) { mc.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;width:100%">No walks logged yet</div>'; }
+    else {
+      var maxM=1; for (var i=0;i<keys.length;i++) if (map[keys[i]]>maxM) maxM=map[keys[i]];
+      var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var html='';
+      for (var i=0;i<keys.length;i++) {
+        var mon=parseInt(keys[i].split('-')[1])-1;
+        var h=Math.max(Math.round((map[keys[i]]/maxM)*88),4);
+        html+='<div class="mwrap"><span class="mval">'+map[keys[i]].toFixed(1)+'</span><div class="mbar" style="height:'+h+'px;background:linear-gradient(180deg,#2d5a3d,#7ab890)"></div><span class="mlbl">'+mo[mon]+'</span></div>';
+      }
+      mc.innerHTML=html;
+    }
+  }
+  var sorted5=walks.slice().sort(function(a,b){return b.miles-a.miles;}).slice(0,5);
+  var lc=document.getElementById('lchart');
+  if (lc) {
+    if (!sorted5.length) { lc.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center">No walks yet</div>'; }
+    else {
+      var maxL=sorted5[0].miles; var html='';
+      for (var i=0;i<sorted5.length;i++) {
+        var pct=Math.round((sorted5[i].miles/maxL)*100);
+        var bg=i===0?'linear-gradient(90deg,#2d5a3d,#7ab890)':'#a8c8b0';
+        var cls=i===0?'ldate top':'ldate';
+        var trophy=i===0?'&#127942; ':'';
+        html+='<div class="lrow"><div class="lhdr"><span class="'+cls+'">'+trophy+fmtDate(sorted5[i].date)+'</span><span class="lmi">'+sorted5[i].miles+' mi</span></div><div class="ltrack"><div class="lfill" style="width:'+pct+'%;background:'+bg+'"></div></div></div>';
+      }
+      lc.innerHTML=html;
+    }
+  }
+  var timed=[];
+  for (var i=0;i<walks.length;i++) if (totalMins(walks[i])>0&&walks[i].miles>0) timed.push(walks[i]);
+  var ps=document.getElementById('pstats');
+  if (ps) {
+    if (!timed.length) { ps.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log walk durations to unlock speed stats</div>'; }
+    else {
+      var sumMph=0; for (var i=0;i<timed.length;i++) sumMph+=timed[i].miles/(totalMins(timed[i])/60);
+      var avgMph=(sumMph/timed.length).toFixed(2);
+      var sumPace=0; for (var i=0;i<timed.length;i++) sumPace+=totalMins(timed[i])/timed[i].miles;
+      var avgPace=sumPace/timed.length;
+      var fastMph=0; for (var i=0;i<timed.length;i++) { var s=timed[i].miles/(totalMins(timed[i])/60); if (s>fastMph) fastMph=s; }
+      var sumW=0; for (var i=0;i<walks.length;i++) sumW+=walks[i].miles;
+      var avgW=(sumW/walks.length).toFixed(1);
+      var estMins=avgPace*goalMiles;
+      var estH=Math.floor(estMins/60); var estM=Math.round(estMins%60);
+      ps.innerHTML='<div class="sgrid" style="margin-bottom:0"><div class="stat" style="grid-column:1/-1"><div class="stat-val">'+avgMph+' mph</div><div class="stat-lbl">average speed</div><div style="font-size:11px;color:#4a8c5c;margin-top:6px">At this pace, '+goalMiles+' mi &asymp; '+estH+'h '+estM+'m</div></div><div class="stat"><div class="stat-val">'+fmtPace(avgPace)+'</div><div class="stat-lbl">avg pace (min/mi)</div></div><div class="stat"><div class="stat-val">'+fastMph.toFixed(2)+'</div><div class="stat-lbl">fastest (mph)</div></div><div class="stat"><div class="stat-val">'+avgW+'</div><div class="stat-lbl">avg walk (mi)</div></div><div class="stat"><div class="stat-val">'+walks.length+'</div><div class="stat-lbl">total walks</div></div></div>';
+    }
+  }
+}
+
+function renderInsights() {
+  var el=document.getElementById('ins-list');
+  if (!el) return;
+  var walks=appData.walks;
+  var goal=appData.goal;
+  var goalMiles=goal.goalMiles||13.1;
+  var days=goal.targetDate?daysUntil(goal.targetDate):null;
+  var ins=[];
+  if (!walks.length) { el.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log your first walk to get personalised insights!</div>'; return; }
+  var sorted=walks.slice().sort(function(a,b){return a.date>b.date?1:-1;});
+  var longest=0; for (var i=0;i<walks.length;i++) if (walks[i].miles>longest) longest=walks[i].miles;
+  if (days!==null) {
+    var pct=Math.round((longest/goalMiles)*100);
+    var wks=Math.floor(days/7);
+    if (days<0) ins.push({icon:'&#127937;',tag:'tinfo',label:'Info',text:'Race day has passed! Hope it went amazingly.'});
+    else if (days===0) ins.push({icon:'&#127881;',tag:'tgreat',label:'Great',text:'<b>Race day is TODAY!</b> Good luck!'});
+    else if (pct>=100) ins.push({icon:'&#127942;',tag:'tgreat',label:'Great',text:'<b>Race ready!</b> Your longest walk ('+longest+' mi) matches your '+goalMiles+' mi goal!'});
+    else if (pct>=75) ins.push({icon:'&#128170;',tag:'tgreat',label:'Great',text:'<b>Looking strong!</b> Longest walk is '+longest+' mi - '+pct+'% of your goal with '+wks+' weeks to go.'});
+    else if (pct>=50) { var add=wks>0?((goalMiles-longest)/wks).toFixed(1):'--'; ins.push({icon:'&#128200;',tag:'ttip',label:'Tip',text:'Your longest walk ('+longest+' mi) is '+pct+'% of your goal. Aim to add '+add+' mi to your long walk each week.'}); }
+    else ins.push({icon:'&#9888;',tag:'twarn',label:'Heads up',text:'Your longest walk ('+longest+' mi) is only '+pct+'% of your '+goalMiles+' mi goal with '+wks+' weeks left.'});
+  } else {
+    ins.push({icon:'&#127919;',tag:'ttip',label:'Tip',text:'<b>Set your race date</b> using the target button above to unlock race readiness insights.'});
+  }
+  var cut7=new Date(); cut7.setDate(cut7.getDate()-7);
+  var tw=0; for (var i=0;i<walks.length;i++) if (getDate(walks[i].date)>=cut7) tw++;
+  if (tw>=4) ins.push({icon:'&#127775;',tag:'tgreat',label:'Great',text:'<b>Excellent consistency!</b> '+tw+' walks this week.'});
+  else if (tw===3) ins.push({icon:'&#9989;',tag:'tgreat',label:'Great',text:'<b>Good week!</b> 3 walks logged so far.'});
+  else if (tw<=1) ins.push({icon:'&#128161;',tag:'ttip',label:'Tip',text:'Aim for 3-4 walks per week to build up steadily.'});
+  if (sorted.length>=4) {
+    var r=sorted.slice(-4);
+    var f2=(r[0].miles+r[1].miles)/2;
+    var l2=(r[2].miles+r[3].miles)/2;
+    if (l2>f2*1.1) ins.push({icon:'&#128200;',tag:'tgreat',label:'Great',text:'<b>Great progress!</b> Your recent walks are longer - endurance is building!'});
+    else if (l2<f2*0.85) ins.push({icon:'&#128161;',tag:'ttip',label:'Tip',text:'Recent walks have been shorter. Try to include a longer walk each week.'});
+  }
+  var timed=[]; for (var i=0;i<sorted.length;i++) if (totalMins(sorted[i])>0&&sorted[i].miles>0) timed.push(sorted[i]);
+  if (timed.length>=2&&days!==null&&days>0) {
+    var sp=0; for (var i=0;i<timed.length;i++) sp+=totalMins(timed[i])/timed[i].miles;
+    var ap=sp/timed.length;
+    var em=Math.round(ap*goalMiles);
+    ins.push({icon:'&#9201;',tag:'tinfo',label:'Info',text:'Estimated '+goal.raceName+' finish time: <b>'+Math.floor(em/60)+'h '+Math.round(em%60)+'m</b> at your current pace.'});
+  }
+  var html='';
+  for (var i=0;i<ins.length;i++) {
+    html+='<div class="ins-item"><div class="ins-icon">'+ins[i].icon+'</div><div class="ins-body"><span class="ins-tag '+ins[i].tag+'">'+ins[i].label+'</span><br/>'+ins[i].text+'</div></div>';
+  }
+  el.innerHTML=html;
+}
+
+function renderFriends() {
+  var fl=document.getElementById('friends-list');
+  var fc=document.getElementById('friends-card');
+  if (appData.friends.length) {
+    if (fc) fc.className='card';
+    if (fl) {
+      var html='';
+      for (var i=0;i<appData.friends.length;i++) {
+        var f=appData.friends[i];
+        var imp=f.importedAt?fmtDate(f.importedAt.slice(0,10)):'';
+        html+='<div class="frow" id="fr-'+f.id+'"><div><div class="fname">'+f.name+'</div><div class="fmeta">'+f.walks.length+' walks &middot; imported '+imp+'</div></div><div id="frb-'+f.id+'"><button class="edit-btn" onclick="confirmRemove(\''+f.id+'\')">&#128465;&#65039;</button></div></div>';
+      }
+      fl.innerHTML=html;
+    }
+  } else { if (fc) fc.className='card hidden'; }
+  var rows=[]; rows.push(calcStats(appData.walks,appData.profile.name||'Me'));
+  for (var i=0;i<appData.friends.length;i++) rows.push(calcStats(appData.friends[i].walks,appData.friends[i].name));
+  var ct=document.getElementById('cmp-title');
+  if (ct) ct.textContent='Group Comparison'+(rows.length>1?' - '+rows.length+' walkers':'');
+  var ctbl=document.getElementById('cmp-table');
+  if (!ctbl) return;
+  if (rows.length===1) { ctbl.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Import a friend to compare stats</div>'; return; }
+  var metrics=[
+    {key:'totalWalks',label:'Total Walks',fmt:function(v){return v||0;},hi:true},
+    {key:'walksThisMonth',label:'Walks/Month',fmt:function(v){return v||0;},hi:true},
+    {key:'avgDistMonth',label:'Avg Dist/Month',fmt:function(v){return v?v+' mi':'--';},hi:true},
+    {key:'longest',label:'Longest Walk',fmt:function(v){return v?v+' mi':'--';},hi:true},
+    {key:'avgPace',label:'Avg Pace',fmt:function(v){return v?fmtPace(v):'--';},hi:false}
+  ];
+  var thead='<tr><th class="cslbl">STAT</th>';
+  for (var i=0;i<rows.length;i++) thead+='<th class="cperson"><div class="cavatar" style="background:'+COLORS[i%COLORS.length]+'">'+rows[i].name.charAt(0).toUpperCase()+'</div><div class="cname">'+rows[i].name+'</div></th>';
+  thead+='</tr>';
+  var tbody='';
+  for (var mi=0;mi<metrics.length;mi++) {
+    var m=metrics[mi]; var best=null;
+    for (var ri=0;ri<rows.length;ri++) { var v=rows[ri][m.key]; if (v!==null&&v!==undefined) { if (best===null) best=v; else if (m.hi&&v>best) best=v; else if (!m.hi&&v<best) best=v; } }
+    tbody+='<tr style="background:'+(mi%2===0?'#fafbfa':'#fff')+'">';
+    tbody+='<td class="cslbl">'+m.label+'</td>';
+    for (var ri=0;ri<rows.length;ri++) { var v=rows[ri][m.key]; var ib=(v!==null&&v!==undefined&&v==best&&rows.length>1); tbody+='<td class="cval'+(ib?' best':'')+'">'+m.fmt(v)+(ib?' &#127807;':'')+'</td>'; }
+    tbody+='</tr>';
+  }
+  ctbl.innerHTML='<div style="overflow-x:auto"><table class="ctable"><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table></div>';
+}
+
+function calcStats(walks,name) {
+  var cut30=new Date(); cut30.setDate(cut30.getDate()-30);
+  var month=[];
+  for (var i=0;i<walks.length;i++) if (getDate(walks[i].date)>=cut30) month.push(walks[i]);
+  var longest=0; for (var i=0;i<walks.length;i++) if (walks[i].miles>longest) longest=walks[i].miles;
+  var avgDist=null;
+  if (month.length) { var s=0; for (var i=0;i<month.length;i++) s+=month[i].miles; avgDist=(s/month.length).toFixed(1); }
+  var timed=[]; for (var i=0;i<walks.length;i++) if (totalMins(walks[i])>0&&walks[i].miles>0) timed.push(walks[i]);
+  var avgPace=null;
+  if (timed.length) { var s=0; for (var i=0;i<timed.length;i++) s+=totalMins(timed[i])/timed[i].miles; avgPace=s/timed.length; }
+  return {name:name,totalWalks:walks.length,walksThisMonth:month.length,avgDistMonth:avgDist,longest:longest||null,avgPace:avgPace};
+}
+
+function confirmRemove(id) {
+  var el=document.getElementById('frb-'+id);
+  if (el) el.innerHTML='<div class="fr-row"><button class="fr-no" onclick="renderFriends()">Cancel</button><button class="fr-yes" onclick="removeFriend(\''+id+'\')">Remove</button></div>';
+}
+
+function removeFriend(id) {
+  var f2=[]; for (var i=0;i<appData.friends.length;i++) if (appData.friends[i].id!==id) f2.push(appData.friends[i]);
+  appData.friends=f2; save(); renderFriends();
+}
+
+function clearLog() {
+  document.getElementById('l-date').value=today();
+  document.getElementById('l-miles').value='';
+  document.getElementById('l-hrs').value='';
+  document.getElementById('l-mins').value='';
+  document.getElementById('l-note').value='';
+}
+
+function saveLogWalk() {
+  var miles=parseFloat(document.getElementById('l-miles').value);
+  var date=document.getElementById('l-date').value;
+  var errEl=document.getElementById('log-err');
+  var okEl=document.getElementById('log-ok');
+  if (errEl) errEl.style.display='none';
+  if (okEl) okEl.style.display='none';
+  if (!miles||!date) { if (errEl) { errEl.textContent='Please enter a date and distance.'; errEl.style.display='block'; } return; }
+  var walk={id:Date.now().toString(),date:date,miles:miles,durationHours:parseInt(document.getElementById('l-hrs').value)||0,durationMins:parseInt(document.getElementById('l-mins').value)||0,comment:document.getElementById('l-note').value};
+  appData.walks.push(walk); save(); clearLog();
+  if (okEl) { okEl.style.display='block'; setTimeout(function(){okEl.style.display='none';},2000); }
+}
+
+function openWalkModal() {
+  editingId=null;
+  document.getElementById('wm-title').textContent='Log a Walk';
+  document.getElementById('m-date').value=today();
+  document.getElementById('m-miles').value='';
+  document.getElementById('m-hrs').value='';
+  document.getElementById('m-mins').value='';
+  document.getElementById('m-note').value='';
+  document.getElementById('del-section').innerHTML='';
+  var me=document.getElementById('modal-err'); if (me) me.style.display='none';
+  document.getElementById('walk-ov').className='overlay';
+}
+
+function openEditWalk(id) {
+  var w=null; for (var i=0;i<appData.walks.length;i++) if (appData.walks[i].id===id) { w=appData.walks[i]; break; }
+  if (!w) return;
+  editingId=id;
+  document.getElementById('wm-title').textContent='Edit Walk';
+  document.getElementById('m-date').value=w.date;
+  document.getElementById('m-miles').value=w.miles;
+  document.getElementById('m-hrs').value=w.durationHours||'';
+  document.getElementById('m-mins').value=w.durationMins||'';
+  document.getElementById('m-note').value=w.comment||'';
+  document.getElementById('del-section').innerHTML='<button class="btn-red" onclick="showDelConfirm()">&#128465;&#65039; Delete this walk</button>';
+  var me=document.getElementById('modal-err'); if (me) me.style.display='none';
+  document.getElementById('walk-ov').className='overlay';
+}
+
+function showDelConfirm() {
+  document.getElementById('del-section').innerHTML='<div class="confirm-box"><div class="confirm-msg">Are you sure? This cannot be undone.</div><div class="confirm-row"><button class="confirm-no" onclick="hideDelConfirm()">Cancel</button><button class="confirm-yes" onclick="doDelete()">Yes, delete</button></div></div>';
+}
+
+function hideDelConfirm() {
+  document.getElementById('del-section').innerHTML='<button class="btn-red" onclick="showDelConfirm()">&#128465;&#65039; Delete this walk</button>';
+}
+
+function doDelete() {
+  var w2=[]; for (var i=0;i<appData.walks.length;i++) if (appData.walks[i].id!==editingId) w2.push(appData.walks[i]);
+  appData.walks=w2; save(); closeWalkModal();
+  if (currentTab==='history') renderHistory();
+  if (currentTab==='dashboard') renderDashboard();
+}
+
+function saveModalWalk() {
+  var miles=parseFloat(document.getElementById('m-miles').value);
+  var date=document.getElementById('m-date').value;
+  var me=document.getElementById('modal-err');
+  if (me) me.style.display='none';
+  if (!miles||!date) { if (me) { me.textContent='Please enter a date and distance.'; me.style.display='block'; } return; }
+  var walk={id:editingId||Date.now().toString(),date:date,miles:miles,durationHours:parseInt(document.getElementById('m-hrs').value)||0,durationMins:parseInt(document.getElementById('m-mins').value)||0,comment:document.getElementById('m-note').value};
+  if (editingId) { for (var i=0;i<appData.walks.length;i++) if (appData.walks[i].id===editingId) { appData.walks[i]=walk; break; } }
+  else appData.walks.push(walk);
+  save(); closeWalkModal();
+  if (currentTab==='dashboard') renderDashboard();
+  if (currentTab==='history') renderHistory();
+}
+
+function closeWalkModal() { document.getElementById('walk-ov').className='overlay hidden'; }
+function walkBgClick(e) { if (e.target===document.getElementById('walk-ov')) closeWalkModal(); }
+
+function openGoal() {
+  goalSel=appData.goal.goalMiles||13.1;
+  document.getElementById('g-date').value=appData.goal.targetDate||'';
+  document.getElementById('g-custname').value=appData.goal.raceName||'';
+  document.getElementById('g-custmi').value='';
+  renderPresets();
+  document.getElementById('goal-ov').className='overlay';
+}
+
+function renderPresets() {
+  var html='';
+  for (var i=0;i<PRESETS.length;i++) {
+    var p=PRESETS[i];
+    var sel=(p.miles===null&&goalSel===null)||(p.miles!==null&&p.miles===goalSel);
+    var sub=p.miles!==null?'<div class="psub">'+p.miles+' mi</div>':'';
+    html+='<button class="pbtn'+(sel?' sel':'')+'" onclick="selectPreset('+(p.miles===null?'null':p.miles)+',\''+p.label+'\')">'+p.label+sub+'</button>';
+  }
+  document.getElementById('pgrid').innerHTML=html;
+  var cf=document.getElementById('custom-flds');
+  if (cf) cf.className=goalSel===null?'':'hidden';
+}
+
+function selectPreset(miles,label) {
+  goalSel=miles;
+  if (miles!==null) document.getElementById('g-custname').value=label;
+  renderPresets();
+}
+
+function saveGoal() {
+  var finalMiles=goalSel===null?(parseFloat(document.getElementById('g-custmi').value)||13.1):goalSel;
+  appData.goal={targetDate:document.getElementById('g-date').value,raceName:document.getElementById('g-custname').value||'Half Marathon',goalMiles:finalMiles};
+  save(); closeGoal(); renderHeader();
+  if (currentTab==='dashboard') renderDashboard();
+}
+
+function closeGoal() { document.getElementById('goal-ov').className='overlay hidden'; }
+function goalBgClick(e) { if (e.target===document.getElementById('goal-ov')) closeGoal(); }
+
+function openProfile() {
+  document.getElementById('p-name').value=appData.profile.name||'Me';
+  document.getElementById('prof-ov').className='overlay';
+}
+
+function saveProfile() {
+  appData.profile.name=document.getElementById('p-name').value||'Me';
+  save(); closeProfile(); renderHeader();
+}
+
+function closeProfile() { document.getElementById('prof-ov').className='overlay hidden'; }
+function profBgClick(e) { if (e.target===document.getElementById('prof-ov')) closeProfile(); }
+
+function exportData() {
+  var payload={version:1,name:appData.profile.name||'Me',exportedAt:new Date().toISOString(),walks:appData.walks};
+  var json=JSON.stringify(payload,null,2);
+  try {
+    var blob=new Blob([json],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;
+    a.download=(appData.profile.name||'walkwithme').replace(/\s+/g,'-').toLowerCase()+'-walks.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  } catch(e) { showExportFallback(json); }
+}
+
+function showExportFallback(json) {
+  var el=document.getElementById('export-fallback');
+  if (!el) {
+    el=document.createElement('div'); el.id='export-fallback';
+    el.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:300;padding:20px;overflow-y:auto;';
+    el.innerHTML='<div style="max-width:480px;margin:0 auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="color:#2d5a3d">Export Data</h2><button onclick="document.getElementById(\'export-fallback\').remove()" style="background:#e8f4ec;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:700;color:#2d5a3d">Close</button></div><p style="font-size:13px;color:#8aa89a;margin-bottom:12px">Copy all the text below and send it to your friend.</p><textarea id="export-text" style="width:100%;height:60vh;font-size:11px;padding:12px;border:1.5px solid #e8ede9;border-radius:10px;" readonly></textarea></div>';
+    document.body.appendChild(el);
+  }
+  document.getElementById('export-text').value=json;
+}
+
+function handleImport(e) {
+  var file=e.target.files[0]; if (!file) return;
+  var err=document.getElementById('imp-err');
+  var ok=document.getElementById('imp-ok');
+  if (err) err.style.display='none';
+  if (ok) ok.style.display='none';
+  var reader=new FileReader();
+  reader.onload=function(evt) {
+    try {
+      var payload=JSON.parse(evt.target.result);
+      if (!payload.walks||!Array.isArray(payload.walks)) throw new Error('bad');
+      var name=payload.name||'Friend'; var id=Date.now().toString();
+      var f2=[]; for (var i=0;i<appData.friends.length;i++) if (appData.friends[i].name!==name) f2.push(appData.friends[i]);
+      f2.push({id:id,name:name,importedAt:new Date().toISOString(),walks:payload.walks});
+      appData.friends=f2; save();
+      if (ok) { ok.textContent=name+"'s data imported!"; ok.style.display='block'; }
+      renderFriends();
+    } catch(ex) {
+      if (err) { err.textContent="Couldn't read that file. Make sure it's a Walk With Me export."; err.style.display='block'; }
+    }
+    e.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('l-date').value=today();
+renderHeader();
+renderDashboard();
+</script>
+</body>
+</html>  .walk-badges { margin-top:4px; display:flex; flex-wrap:wrap; gap:2px; }
   .badge { display:inline-block; padding:2px 8px; border-radius:20px; background:var(--green-pale); color:var(--green-dark); font-size:11px; font-weight:600; margin-right:2px; }
   .walk-comment { font-size:12px; color:var(--muted); margin-top:3px; }
   .edit-btn { background:none; border:none; cursor:pointer; font-size:16px; margin-left:8px; flex-shrink:0; }
