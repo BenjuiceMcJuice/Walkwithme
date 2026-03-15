@@ -252,7 +252,7 @@ textarea.inp{resize:none;}
   <div class="tab hidden" id="tab-settings">
     <div class="card">
       <div class="card-title">Coachy McCoachface Setup</div>
-      <p class="sheet-desc">Enter your free Groq API key to unlock personalised Coachy McCoachfaceing. Get a free key at <b>console.groq.com</b> &rarr; API Keys.</p>
+      <p class="sheet-desc">Enter your free API key to unlock personalised Coachy McCoachfaceing. Get a free key at <b>console.console.groq.com</b> &rarr; API Keys.</p>
       <label class="lbl">Groq API Key</label>
       <input type="password" class="inp" id="groq-key-input" placeholder="gsk_..."/>
       <div class="msg-ok" id="key-saved-ok">API key saved!</div>
@@ -904,26 +904,14 @@ function saveProfileFromSettings() {
   if (btn) { btn.textContent='Saved!'; setTimeout(function(){ btn.textContent='Save Name'; }, 1500); }
 }
 
-function setPersona(p) {
-  localStorage.setItem('wwm_persona', p);
-  var cb = document.getElementById('persona-coachy');
-  var mb = document.getElementById('persona-maggie');
-  if (cb) cb.className = p==='coachy' ? 'persona-btn active-persona' : 'persona-btn';
-  if (mb) mb.className = p==='maggie' ? 'persona-btn active-persona' : 'persona-btn';
-}
-
-function getPersona() {
-  return localStorage.getItem('wwm_persona') || 'coachy';
-}
-
 function getAIInsights() {
   var key = getGroqKey();
   var el = document.getElementById('ai-insights');
   if (!el) return;
-  if (!key) { el.innerHTML = '<div style="background:#fff8e8;border:1px solid #f0d88a;border-radius:10px;padding:14px;font-size:13px;color:#8a6a00">No Groq API key. Go to Settings tab to add your free key from console.groq.com<\/div>'; return; }
+  if (!key) { el.innerHTML = '<div style="background:#fff8e8;border:1px solid #f0d88a;border-radius:10px;padding:14px;font-size:13px;color:#8a6a00">No API key. Go to Settings tab to add your free key from console.console.groq.com<\/div>'; return; }
   if (!appData.walks || appData.walks.length < 2) { el.innerHTML = '<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log a few more walks first!<\/div>'; return; }
-  var persona = getPersona();
-  var personaName = persona === 'coachy' ? 'Coachy McCoachface' : 'Mileage Maggie';
+  var persona = 'coachy';
+  var personaName = persona === 'coachy' ? 'Coachy McCoachface' : 'Coachy McCoachface';
   el.innerHTML = '<div style="text-align:center;padding:20px;color:#4a8c5c;font-size:13px">Analysing your training data...<\/div>';
   var walks = appData.walks.slice().sort(function(a,b){ return a.date > b.date ? 1 : -1; });
   var goal = appData.goal;
@@ -946,20 +934,25 @@ function getAIInsights() {
     var mins = totalMins(w);
     var line = fmtDate(w.date) + ': ' + w.miles + ' mi';
     if (mins > 0) line += ', ' + fmtDur(w) + ', ' + (w.miles/(mins/60)).toFixed(2) + ' mph, ' + fmtPace(mins/w.miles) + ' min/mi';
-    if (w.comment) line += ' (' + w.comment + ')';
+    if (w.comment) line += ' (' + w.comment.replace(/['"\\]/g,'') + ')';
     walkLines.push(line);
   }
   var nl = '\n';
   var goalStr = goal.raceName + ' (' + (goal.goalMiles||13.1) + ' miles)';
   if (goal.targetDate) goalStr += ', race date: ' + fmtDate(goal.targetDate) + (days !== null ? ' (' + days + ' days away)' : '');
-  var dataStr = 'Athlete: ' + (appData.profile.name||'Me') + nl + 'Goal: ' + goalStr + nl + 'Total walks: ' + walks.length + nl + 'Longest walk: ' + longest + ' miles' + nl + 'Avg pace: ' + avgPaceStr + ' min/mi' + nl + 'Avg speed: ' + avgMphStr + ' mph' + nl + nl + 'Walk history:' + nl + walkLines.join(nl);
-  var instrStr = nl + nl + 'Give 4-5 specific coaching insights using real numbers from this data. Cover: race readiness, training consistency, pace trends, recommended next steps, estimated finish time if pace data available. Stay in character. 2-3 sentences each. Plain text only, no markdown, each insight its own paragraph.';
+  var summary = 'Athlete: ' + (appData.profile.name||'Me') + nl;
+  summary += 'Goal: ' + goalStr + nl;
+  summary += 'Total walks: ' + walks.length + nl;
+  summary += 'Longest walk: ' + longest + ' miles' + nl;
+  summary += 'Avg pace: ' + avgPaceStr + ' min/mi' + nl;
+  summary += 'Avg speed: ' + avgMphStr + ' mph' + nl + nl;
+  summary += 'Walk history:' + nl + walkLines.join(nl);
+  summary += nl + nl + 'Give 4-5 specific coaching insights using real numbers. Cover: race readiness, training consistency, pace trends, next steps, estimated finish time. Stay in character. 2-3 sentences each. Plain text only, no markdown, each insight its own paragraph.';
   var coachyPrompt = 'You are Coachy McCoachface, a sarcastic cheeky amusing walking coach. Sharp wit, gentle banter, never rude. Like a friend who teases you but is secretly your biggest supporter. Use light sarcasm and humour to deliver genuinely useful coaching advice. Always end encouragingly even if delivered with a raised eyebrow.';
-  var maggiePrompt = 'You are Mileage Maggie, a grim no-nonsense northern English walking coach. Blunt, slightly miserable, do not hand out compliments easily. When you say something positive it means a lot. Matter-of-fact northern way of speaking. Use phrases like aye, reet, nowt wrong with that I suppose. You have walked thousands of miles. Despite your gruff exterior you genuinely want this person to succeed. Never rude or hurtful, just straight-talking and dry.';
-  var systemPrompt = persona === 'coachy' ? coachyPrompt : maggiePrompt;
-  var requestBody = JSON.stringify({model:'llama3-8b-8192',messages:[{role:'system',content:systemPrompt},{role:'user',content:dataStr+instrStr}],max_tokens:700,temperature:0.8});
+    var systemPrompt = coachyPrompt;
+  var requestBody = JSON.stringify({model:'llama3-8b-8192',messages:[{role:'system',content:systemPrompt},{role:'user',content:summary}],max_tokens:700,temperature:0.8});
   var xhr = new XMLHttpRequest();
-  xhr.open('POST','https://api.groq.com/openai/v1/chat/completions',true);
+  xhr.open('POST','https://api.console.groq.com/openai/v1/chat/completions',true);
   xhr.setRequestHeader('Content-Type','application/json');
   xhr.setRequestHeader('Authorization','Bearer ' + key);
   xhr.onreadystatechange = function() {
@@ -984,6 +977,6 @@ function getAIInsights() {
   };
   xhr.send(requestBody);
 }
-</script>
-</body>
-</html>
+<\/script>
+<\/body>
+<\/html>
