@@ -1071,15 +1071,15 @@ function getCoachInsights() {
   var goalStr = goal.raceName + ' (' + (goal.goalMiles || 13.1) + ' miles)';
   if (goal.targetDate && days !== null) { goalStr += ', race in ' + days + ' days on ' + fmtDate(goal.targetDate); }
   var dataBlock = 'Athlete: ' + (appData.profile.name || 'Me') + '. Goal: ' + goalStr + '. Total walks: ' + walks.length + '. Longest walk: ' + longest + ' miles. Average pace: ' + avgPaceStr + '. Average speed: ' + avgMphStr + '. Walk history from oldest to newest: ' + walkLines.join('; ');
-  var instructions = 'Give exactly 4 coaching insights, each as its own paragraph. Reference specific numbers from the data. Cover these topics: 1) Race readiness assessment. 2) Training frequency and consistency. 3) Pace or distance trends. 4) Recommended focus for the next 2 to 3 weeks. If pace data is available also include an estimated finish time. Write in the voice of Coachy McCoachface who is sarcastic, cheeky and amusing but never rude and always genuinely helpful. Use light humour and banter. End on an encouraging note. Plain text only, no bullet points, no asterisks, no markdown.';
-  var sysMsg = 'You are Coachy McCoachface, a sarcastic and cheeky but genuinely helpful walking coach. You use light humour and banter. You are never rude or discouraging. You always give accurate data-based advice. Plain text responses only.';
+  var instructions = 'Give 4 short punchy coaching insights, each as its own paragraph of 1-2 sentences max. Be specific with the numbers. Cover: race readiness, consistency, pace or distance trend, and what to focus on next. Include a cheeky estimated finish time if pace data is available. Keep it brief, funny and useful. No waffle. Plain text only, no bullet points, no asterisks, no markdown.';
+  var sysMsg = 'You are Coachy McCoachface, a sarcastic, cheeky and witty walking coach. Think of a friend who takes the mickey but genuinely wants you to succeed. Keep responses short and punchy. One or two sentences per point maximum. Use dry humour and the occasional eyebrow-raising observation. Never rude, always accurate with the data, but definitely not boring. Plain text only.';
   var body = JSON.stringify({
     model: 'llama-3.3-70b-versatile',
     messages: [
       {role: 'system', content: sysMsg},
       {role: 'user', content: dataBlock + ' ' + instructions}
     ],
-    max_tokens: 600,
+    max_tokens: 350,
     temperature: 0.8
   });
   // Debug - check body is valid JSON
