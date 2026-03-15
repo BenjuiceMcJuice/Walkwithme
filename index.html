@@ -1113,7 +1113,9 @@ function getCoachInsights() {
     } else if (xhr.status === 401) {
       el.innerHTML = '<div style="background:#fff0f0;border:1px solid #f0d0d0;border-radius:10px;padding:14px;font-size:13px;color:#c0504a">Invalid API key. Please check in Settings.</div>';
     } else {
-      el.innerHTML = '<div style="color:#c0504a;font-size:13px;padding:12px">Error ' + xhr.status + '. Please try again.</div>';
+      var errMsg = '';
+      try { var errObj = JSON.parse(xhr.responseText); errMsg = errObj.error ? errObj.error.message : xhr.responseText.slice(0,200); } catch(e) { errMsg = xhr.responseText.slice(0,200); }
+      el.innerHTML = '<div style="color:#c0504a;font-size:13px;padding:12px">Error ' + xhr.status + ': ' + errMsg + '</div>';
     }
   };
   xhr.send(body);
