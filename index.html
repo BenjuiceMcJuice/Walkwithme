@@ -120,6 +120,8 @@ textarea.inp{resize:none;}
 .twarn{background:#fff0f0;color:#c0504a;}
 .tinfo{background:#f0f4ff;color:#4a5c8c;}
 .srow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.persona-btn{flex:1;padding:8px 6px;border-radius:10px;border:1.5px solid #e8ede9;background:#fafbfa;color:#8aa89a;font-size:11px;font-weight:600;cursor:pointer;text-align:center;line-height:1.3;}
+.active-persona{border-color:#4a8c5c;background:#e8f4ec;color:#2d5a3d;}
 </style>
 </head>
 <body>
@@ -148,6 +150,7 @@ textarea.inp{resize:none;}
   <button class="nav-btn" id="nav-history" onclick="showTab('history')">History</button>
   <button class="nav-btn" id="nav-charts" onclick="showTab('charts')">Charts</button>
   <button class="nav-btn" id="nav-friends" onclick="showTab('friends')">Friends</button>
+  <button class="nav-btn" id="nav-settings" onclick="showTab('settings')">Settings</button>
 </div>
 
 <div class="content">
@@ -172,10 +175,12 @@ textarea.inp{resize:none;}
     </div>
     <div class="card">
       <div class="srow">
-        <div class="card-title" style="margin-bottom:0">Your Insights</div>
-        <button class="see-all" onclick="renderInsights()">&#8635; Refresh</button>
+        <div class="card-title" style="margin-bottom:0">Coachy McCoachface</div>
+        <button class="see-all" onclick="getAIInsights()">&#10024; Analyse</button>
       </div>
-      <div id="ins-list"></div>
+      <div id="ai-insights">
+        <div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Tap Analyse for personalised Coachy McCoachfaceing based on your walks.</div>
+      </div>
     </div>
     <div class="card">
       <div class="sec-hdr">
@@ -244,6 +249,31 @@ textarea.inp{resize:none;}
     </div>
   </div>
 
+  <div class="tab hidden" id="tab-settings">
+    <div class="card">
+      <div class="card-title">Coachy McCoachface Setup</div>
+      <p class="sheet-desc">Enter your free Groq API key to unlock personalised Coachy McCoachfaceing. Get a free key at <b>console.groq.com</b> &rarr; API Keys.</p>
+      <label class="lbl">Groq API Key</label>
+      <input type="password" class="inp" id="groq-key-input" placeholder="gsk_..."/>
+      <div class="msg-ok" id="key-saved-ok">API key saved!</div>
+      <button class="btn" onclick="saveGroqKey()">Save Key</button>
+      <div id="key-status" style="margin-top:12px;font-size:13px;text-align:center;color:#8aa89a"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Your Profile</div>
+      <label class="lbl">Display Name</label>
+      <input type="text" class="inp" id="s-profile-name" placeholder="e.g. Sarah"/>
+      <button class="btn" onclick="saveProfileFromSettings()">Save Name</button>
+    </div>
+    <div class="card">
+      <div class="card-title">About</div>
+      <p style="font-size:13px;color:#8aa89a;line-height:1.6">
+        <b style="color:#2d5a3d">Walk With Me</b> &mdash; your personal half marathon training companion.<br/><br/>
+        Your data is stored only on your device. Nothing is sent anywhere except to Groq for AI analysis when you tap Analyse.
+      </p>
+    </div>
+  </div>
+
 </div>
 
 <button class="fab" id="fab" onclick="openWalkModal()">+</button>
@@ -302,7 +332,7 @@ textarea.inp{resize:none;}
 
 <script>
 var SKEY = 'wwm_data_v3';
-var TABS = ['dashboard','log','history','charts','friends'];
+var TABS = ['dashboard','log','history','charts','friends','settings'];
 var PRESETS = [
   {label:'5K',miles:3.1},
   {label:'10K',miles:6.2},
@@ -314,7 +344,6 @@ var COLORS = ['#2d5a3d','#7ab890','#a8c8b0','#c8dfc8','#4a8c5c'];
 var currentTab = 'dashboard';
 var editingId = null;
 var goalSel = 13.1;
-var appData = loadData();
 
 function loadData() {
   var def = {profile:{name:'Me'},goal:{targetDate:'',raceName:'Half Marathon',goalMiles:13.1},walks:[],friends:[]};
@@ -330,6 +359,8 @@ function loadData() {
     };
   } catch(e) { return def; }
 }
+
+var appData = loadData();
 
 function save() {
   try { localStorage.setItem(SKEY, JSON.stringify(appData)); } catch(e) {}
@@ -415,6 +446,7 @@ function showTab(tab) {
   if (tab==='history') renderHistory();
   if (tab==='charts') renderCharts();
   if (tab==='friends') renderFriends();
+  if (tab==='settings') { updateKeyStatus(); var ki=document.getElementById('groq-key-input'); if(ki){var k=getGroqKey(); ki.value=k?k:'';} var sn=document.getElementById('s-profile-name'); if(sn) sn.value=appData.profile.name||''; }
 }
 
 function renderHeader() {
@@ -497,7 +529,6 @@ function renderDashboard() {
       mc.appendChild(wrap);
     }
   }
-  renderInsights();
   var rl=document.getElementById('recent-list');
   if (rl) {
     var sorted=walks.slice().sort(function(a,b){return b.date>a.date?1:-1;});
@@ -592,55 +623,6 @@ function renderCharts() {
       ps.innerHTML='<div class="sgrid" style="margin-bottom:0"><div class="stat" style="grid-column:1/-1"><div class="stat-val">'+avgMph+' mph<\/div><div class="stat-lbl">average speed<\/div><div style="font-size:11px;color:#4a8c5c;margin-top:6px">At this pace, '+goalMiles+' mi &asymp; '+estH+'h '+estM+'m<\/div><\/div><div class="stat"><div class="stat-val">'+fmtPace(avgPace)+'<\/div><div class="stat-lbl">avg pace (min/mi)<\/div><\/div><div class="stat"><div class="stat-val">'+fastMph.toFixed(2)+'<\/div><div class="stat-lbl">fastest (mph)<\/div><\/div><div class="stat"><div class="stat-val">'+avgW+'<\/div><div class="stat-lbl">avg walk (mi)<\/div><\/div><div class="stat"><div class="stat-val">'+walks.length+'<\/div><div class="stat-lbl">total walks<\/div><\/div><\/div>';
     }
   }
-}
-
-function renderInsights() {
-  var el=document.getElementById('ins-list');
-  if (!el) return;
-  var walks=appData.walks;
-  var goal=appData.goal;
-  var goalMiles=goal.goalMiles||13.1;
-  var days=goal.targetDate?daysUntil(goal.targetDate):null;
-  var ins=[];
-  if (!walks.length) { el.innerHTML='<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log your first walk to get personalised insights!<\/div>'; return; }
-  var sorted=walks.slice().sort(function(a,b){return a.date>b.date?1:-1;});
-  var longest=0; for (var i=0;i<walks.length;i++) if (walks[i].miles>longest) longest=walks[i].miles;
-  if (days!==null) {
-    var pct=Math.round((longest/goalMiles)*100);
-    var wks=Math.floor(days/7);
-    if (days<0) ins.push({icon:'&#127937;',tag:'tinfo',label:'Info',text:'Race day has passed! Hope it went amazingly.'});
-    else if (days===0) ins.push({icon:'&#127881;',tag:'tgreat',label:'Great',text:'<b>Race day is TODAY!<\/b> Good luck!'});
-    else if (pct>=100) ins.push({icon:'&#127942;',tag:'tgreat',label:'Great',text:'<b>Race ready!<\/b> Your longest walk ('+longest+' mi) matches your '+goalMiles+' mi goal!'});
-    else if (pct>=75) ins.push({icon:'&#128170;',tag:'tgreat',label:'Great',text:'<b>Looking strong!<\/b> Longest walk is '+longest+' mi - '+pct+'% of your goal with '+wks+' weeks to go.'});
-    else if (pct>=50) { var add=wks>0?((goalMiles-longest)/wks).toFixed(1):'--'; ins.push({icon:'&#128200;',tag:'ttip',label:'Tip',text:'Your longest walk ('+longest+' mi) is '+pct+'% of your goal. Aim to add '+add+' mi to your long walk each week.'}); }
-    else ins.push({icon:'&#9888;',tag:'twarn',label:'Heads up',text:'Your longest walk ('+longest+' mi) is only '+pct+'% of your '+goalMiles+' mi goal with '+wks+' weeks left.'});
-  } else {
-    ins.push({icon:'&#127919;',tag:'ttip',label:'Tip',text:'<b>Set your race date<\/b> using the target button above to unlock race readiness insights.'});
-  }
-  var cut7=new Date(); cut7.setDate(cut7.getDate()-7);
-  var tw=0; for (var i=0;i<walks.length;i++) if (getDate(walks[i].date)>=cut7) tw++;
-  if (tw>=4) ins.push({icon:'&#127775;',tag:'tgreat',label:'Great',text:'<b>Excellent consistency!<\/b> '+tw+' walks this week.'});
-  else if (tw===3) ins.push({icon:'&#9989;',tag:'tgreat',label:'Great',text:'<b>Good week!<\/b> 3 walks logged so far.'});
-  else if (tw<=1) ins.push({icon:'&#128161;',tag:'ttip',label:'Tip',text:'Aim for 3-4 walks per week to build up steadily.'});
-  if (sorted.length>=4) {
-    var r=sorted.slice(-4);
-    var f2=(r[0].miles+r[1].miles)/2;
-    var l2=(r[2].miles+r[3].miles)/2;
-    if (l2>f2*1.1) ins.push({icon:'&#128200;',tag:'tgreat',label:'Great',text:'<b>Great progress!<\/b> Your recent walks are longer - endurance is building!'});
-    else if (l2<f2*0.85) ins.push({icon:'&#128161;',tag:'ttip',label:'Tip',text:'Recent walks have been shorter. Try to include a longer walk each week.'});
-  }
-  var timed=[]; for (var i=0;i<sorted.length;i++) if (totalMins(sorted[i])>0&&sorted[i].miles>0) timed.push(sorted[i]);
-  if (timed.length>=2&&days!==null&&days>0) {
-    var sp=0; for (var i=0;i<timed.length;i++) sp+=totalMins(timed[i])/timed[i].miles;
-    var ap=sp/timed.length;
-    var em=Math.round(ap*goalMiles);
-    ins.push({icon:'&#9201;',tag:'tinfo',label:'Info',text:'Estimated '+goal.raceName+' finish time: <b>'+Math.floor(em/60)+'h '+Math.round(em%60)+'m<\/b> at your current pace.'});
-  }
-  var html='';
-  for (var i=0;i<ins.length;i++) {
-    html+='<div class="ins-item"><div class="ins-icon">'+ins[i].icon+'<\/div><div class="ins-body"><span class="ins-tag '+ins[i].tag+'">'+ins[i].label+'<\/span><br/>'+ins[i].text+'<\/div><\/div>';
-  }
-  el.innerHTML=html;
 }
 
 function renderFriends() {
@@ -892,9 +874,116 @@ function handleImport(e) {
   reader.readAsText(file);
 }
 
-document.getElementById('l-date').value=today();
-renderHeader();
-renderDashboard();
+function getGroqKey() {
+  return localStorage.getItem('wwm_groq_key') || '';
+}
+
+function saveGroqKey() {
+  var key = document.getElementById('groq-key-input').value.trim();
+  if (!key) return;
+  localStorage.setItem('wwm_groq_key', key);
+  var ok = document.getElementById('key-saved-ok');
+  if (ok) { ok.style.display='block'; setTimeout(function(){ ok.style.display='none'; }, 2000); }
+  updateKeyStatus();
+}
+
+function updateKeyStatus() {
+  var el = document.getElementById('key-status');
+  if (!el) return;
+  var key = getGroqKey();
+  el.textContent = key ? 'Key saved. Coachy McCoachface is ready!' : 'No key saved yet.';
+  el.style.color = key ? '#4a8c5c' : '#8aa89a';
+}
+
+function saveProfileFromSettings() {
+  var name = document.getElementById('s-profile-name').value.trim();
+  if (!name) return;
+  appData.profile.name = name;
+  save(); renderHeader();
+  var btn = document.querySelector('#tab-settings .btn');
+  if (btn) { btn.textContent='Saved!'; setTimeout(function(){ btn.textContent='Save Name'; }, 1500); }
+}
+
+function setPersona(p) {
+  localStorage.setItem('wwm_persona', p);
+  var cb = document.getElementById('persona-coachy');
+  var mb = document.getElementById('persona-maggie');
+  if (cb) cb.className = p==='coachy' ? 'persona-btn active-persona' : 'persona-btn';
+  if (mb) mb.className = p==='maggie' ? 'persona-btn active-persona' : 'persona-btn';
+}
+
+function getPersona() {
+  return localStorage.getItem('wwm_persona') || 'coachy';
+}
+
+function getAIInsights() {
+  var key = getGroqKey();
+  var el = document.getElementById('ai-insights');
+  if (!el) return;
+  if (!key) { el.innerHTML = '<div style="background:#fff8e8;border:1px solid #f0d88a;border-radius:10px;padding:14px;font-size:13px;color:#8a6a00">No Groq API key. Go to Settings tab to add your free key from console.groq.com<\/div>'; return; }
+  if (!appData.walks || appData.walks.length < 2) { el.innerHTML = '<div style="color:#8aa89a;font-size:13px;text-align:center;padding:12px">Log a few more walks first!<\/div>'; return; }
+  var persona = getPersona();
+  var personaName = persona === 'coachy' ? 'Coachy McCoachface' : 'Mileage Maggie';
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:#4a8c5c;font-size:13px">Analysing your training data...<\/div>';
+  var walks = appData.walks.slice().sort(function(a,b){ return a.date > b.date ? 1 : -1; });
+  var goal = appData.goal;
+  var days = goal.targetDate ? daysUntil(goal.targetDate) : null;
+  var longest = 0;
+  for (var i=0; i<walks.length; i++) if (walks[i].miles > longest) longest = walks[i].miles;
+  var timed = [];
+  for (var i=0; i<walks.length; i++) if (totalMins(walks[i]) > 0 && walks[i].miles > 0) timed.push(walks[i]);
+  var avgPaceStr = 'unknown';
+  var avgMphStr = 'unknown';
+  if (timed.length) {
+    var sp=0; for (var i=0; i<timed.length; i++) sp += totalMins(timed[i])/timed[i].miles;
+    avgPaceStr = fmtPace(sp/timed.length);
+    var sm=0; for (var i=0; i<timed.length; i++) sm += timed[i].miles/(totalMins(timed[i])/60);
+    avgMphStr = (sm/timed.length).toFixed(2);
+  }
+  var walkLines = [];
+  for (var i=0; i<walks.length; i++) {
+    var w = walks[i];
+    var mins = totalMins(w);
+    var line = fmtDate(w.date) + ': ' + w.miles + ' mi';
+    if (mins > 0) line += ', ' + fmtDur(w) + ', ' + (w.miles/(mins/60)).toFixed(2) + ' mph, ' + fmtPace(mins/w.miles) + ' min/mi';
+    if (w.comment) line += ' (' + w.comment + ')';
+    walkLines.push(line);
+  }
+  var nl = '\n';
+  var goalStr = goal.raceName + ' (' + (goal.goalMiles||13.1) + ' miles)';
+  if (goal.targetDate) goalStr += ', race date: ' + fmtDate(goal.targetDate) + (days !== null ? ' (' + days + ' days away)' : '');
+  var dataStr = 'Athlete: ' + (appData.profile.name||'Me') + nl + 'Goal: ' + goalStr + nl + 'Total walks: ' + walks.length + nl + 'Longest walk: ' + longest + ' miles' + nl + 'Avg pace: ' + avgPaceStr + ' min/mi' + nl + 'Avg speed: ' + avgMphStr + ' mph' + nl + nl + 'Walk history:' + nl + walkLines.join(nl);
+  var instrStr = nl + nl + 'Give 4-5 specific coaching insights using real numbers from this data. Cover: race readiness, training consistency, pace trends, recommended next steps, estimated finish time if pace data available. Stay in character. 2-3 sentences each. Plain text only, no markdown, each insight its own paragraph.';
+  var coachyPrompt = 'You are Coachy McCoachface, a sarcastic cheeky amusing walking coach. Sharp wit, gentle banter, never rude. Like a friend who teases you but is secretly your biggest supporter. Use light sarcasm and humour to deliver genuinely useful coaching advice. Always end encouragingly even if delivered with a raised eyebrow.';
+  var maggiePrompt = 'You are Mileage Maggie, a grim no-nonsense northern English walking coach. Blunt, slightly miserable, do not hand out compliments easily. When you say something positive it means a lot. Matter-of-fact northern way of speaking. Use phrases like aye, reet, nowt wrong with that I suppose. You have walked thousands of miles. Despite your gruff exterior you genuinely want this person to succeed. Never rude or hurtful, just straight-talking and dry.';
+  var systemPrompt = persona === 'coachy' ? coachyPrompt : maggiePrompt;
+  var requestBody = JSON.stringify({model:'llama3-8b-8192',messages:[{role:'system',content:systemPrompt},{role:'user',content:dataStr+instrStr}],max_tokens:700,temperature:0.8});
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST','https://api.groq.com/openai/v1/chat/completions',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.setRequestHeader('Authorization','Bearer ' + key);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState !== 4) return;
+    if (xhr.status === 200) {
+      try {
+        var resp = JSON.parse(xhr.responseText);
+        var text = resp.choices[0].message.content;
+        var paras = text.split('\n').filter(function(p){ return p.trim().length > 0; });
+        var avatarIcon = persona === 'coachy' ? '&#128526;' : '&#128577;';
+        var html = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #f0f4f1"><span style="font-size:22px">' + avatarIcon + '<\/span><span style="font-size:12px;font-weight:700;color:#2d5a3d">' + personaName + '<\/span><\/div>';
+        for (var i=0; i<paras.length; i++) {
+          html += '<div style="font-size:13px;line-height:1.6;color:#2d3b2f;padding:8px 0;border-bottom:1px solid #f0f4f1">' + paras[i] + '<\/div>';
+        }
+        el.innerHTML = html;
+      } catch(e) { el.innerHTML = '<div style="color:#c0504a;font-size:13px;padding:12px">Error reading response. Try again.<\/div>'; }
+    } else if (xhr.status === 401) {
+      el.innerHTML = '<div style="background:#fff0f0;border:1px solid #f0d0d0;border-radius:10px;padding:14px;font-size:13px;color:#c0504a">Invalid API key. Check Settings.<\/div>';
+    } else {
+      el.innerHTML = '<div style="color:#c0504a;font-size:13px;padding:12px">Error ' + xhr.status + '. Try again.<\/div>';
+    }
+  };
+  xhr.send(requestBody);
+}
 </script>
 </body>
 </html>
