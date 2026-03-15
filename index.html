@@ -1074,7 +1074,7 @@ function getCoachInsights() {
   var instructions = 'Give exactly 4 coaching insights, each as its own paragraph. Reference specific numbers from the data. Cover these topics: 1) Race readiness assessment. 2) Training frequency and consistency. 3) Pace or distance trends. 4) Recommended focus for the next 2 to 3 weeks. If pace data is available also include an estimated finish time. Write in the voice of Coachy McCoachface who is sarcastic, cheeky and amusing but never rude and always genuinely helpful. Use light humour and banter. End on an encouraging note. Plain text only, no bullet points, no asterisks, no markdown.';
   var sysMsg = 'You are Coachy McCoachface, a sarcastic and cheeky but genuinely helpful walking coach. You use light humour and banter. You are never rude or discouraging. You always give accurate data-based advice. Plain text responses only.';
   var body = JSON.stringify({
-    model: 'llama3-8b-8192',
+    model: 'llama-3.3-70b-versatile',
     messages: [
       {role: 'system', content: sysMsg},
       {role: 'user', content: dataBlock + ' ' + instructions}
