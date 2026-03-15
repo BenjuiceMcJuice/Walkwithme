@@ -1082,6 +1082,13 @@ function getCoachInsights() {
     max_tokens: 600,
     temperature: 0.8
   });
+  // Debug - check body is valid JSON
+  try {
+    JSON.parse(body);
+  } catch(je) {
+    el.innerHTML = '<div style="color:#c0504a;font-size:13px;padding:12px">JSON build error: ' + je.message + '</div>';
+    return;
+  }
   var xhr = new XMLHttpRequest();
   xhr.open('POST', 'https://api.groq.com/openai/v1/chat/completions', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
